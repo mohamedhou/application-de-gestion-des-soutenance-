@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tableau de bord - Étudiant</title>
+</head>
+<body>
+    <h1>Bienvenue <span th:text="${etudiant.nom}"></span>!</h1>
+    <a href="/logout">Déconnexion</a>
+    
+    <h2>Sujets disponibles</h2>
+    <table border="1">
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="sujet : ${sujets}">
+            <td th:text="${sujet.titre}"></td>
+            <td th:text="${sujet.description}"></td>
+            <td><a th:href="@{/etudiant/choisir-sujet/{id}(id=${sujet.id})}">Choisir</a></td>
+        </tr>
+    </table>
+    
+    <div th:if="${soutenance}">
+        <h2>Ma soutenance</h2>
+        <p>Date: <span th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></span></p>
+        <p>Heure: <span th:text="${#temporals.format(soutenance.heure, 'HH:mm')}"></span></p>
+        <p>Salle: <span th:text="${soutenance.salle.nom}"></span></p>
+        <p>Jury: 
+            <span th:each="jury : ${soutenance.jurys}" 
+                  th:text="${jury.nom + ' ' + jury.prenom + (juryStat.last ? '' : ', ')}"></span>
+        </p>
+    </div>
+</body>
+</html>

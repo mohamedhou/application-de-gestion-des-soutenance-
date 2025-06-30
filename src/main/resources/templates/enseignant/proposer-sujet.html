@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Proposer un sujet</title>
+</head>
+<body>
+    <h1>Proposer un nouveau sujet</h1>
+    <form th:action="@{/enseignant/proposer-sujet}" th:object="${sujet}" method="post">
+        <div>
+            <label>Titre:</label>
+            <input type="text" th:field="*{titre}" required>
+        </div>
+        <div>
+            <label>Description:</label>
+            <textarea th:field="*{description}" required></textarea>
+        </div>
+        <button type="submit">Soumettre</button>
+    </form>
+</body>
+</html>
