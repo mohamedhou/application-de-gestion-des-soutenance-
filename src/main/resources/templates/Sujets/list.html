@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sujets de PFE</title>
+</head>
+<body>
+    <h1>Liste des sujets</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titre</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="sujet : ${sujets}">
+                <td th:text="${sujet.id}"></td>
+                <td th:text="${sujet.titre}"></td>
+                <td th:text="${sujet.description}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/sujets/new}">Ajouter un sujet</a>
+</body>
+</html>

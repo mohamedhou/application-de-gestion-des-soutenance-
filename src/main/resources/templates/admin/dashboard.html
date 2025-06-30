@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tableau de bord - Administrateur</title>
+</head>
+<body>
+    <h1>Tableau de bord administrateur</h1>
+    <a href="/logout">Déconnexion</a>
+    
+    <h2>Sujets à valider</h2>
+    <table border="1">
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Encadrant</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="sujet : ${sujets}" th:if="${not sujet.valide}">
+            <td th:text="${sujet.titre}"></td>
+            <td th:text="${sujet.description}"></td>
+            <td th:text="${sujet.encadrant.nom + ' ' + sujet.encadrant.prenom}"></td>
+            <td><a th:href="@{/admin/valider-sujet/{id}(id=${sujet.id})}">Valider</a></td>
+        </tr>
+    </table>
+    
+    <h2>Planifier une soutenance</h2>
+    <form th:action="@{/admin/planifier-soutenance}" method="post">
+        <div>
+            <label>Étudiant:</label>
+            <select name="etudiant.id" required>
+                <option th:each="etudiant : ${etudiants}" 
+                        th:value="${etudiant.id}"
+                        th:text="${etudiant.nom + ' ' + etudiant.prenom}"></option>
+            </select>
+        </div>
+        <div>
+            <label>Sujet:</label>
+            <select name="sujet.id" required>
+                <option th:each="sujet : ${sujets}" 
+                        th:value="${sujet.id}"
+                        th:text="${sujet.titre}"></option>
+            </select>
+        </div>
+        <div>
+            <label>Date:</label>
+            <input type="date" name="date" required>
+        </div>
+        <div>
+            <label>Heure:</label>
+            <input type="time" name="heure" required>
+        </div>
+        <div>
+            <label>Salle:</label>
+            <select name="salle.id" required>
+                <option th:each="salle : ${salles}" 
+                        th:value="${salle.id}"
+                        th:text="${salle.nom}"></option>
+            </select>
+        </div>
+        <button type="submit">Planifier</button>
+    </form>
+    
+    <h2>Soutenances planifiées</h2>
+    <table border="1">
+        <tr>
+            <th>Étudiant</th>
+            <th>Sujet</th>
+            <th>Date</th>
+            <th>Salle</th>
+        </tr>
+        <tr th:each="soutenance : ${soutenances}">
+            <td th:text="${soutenance.etudiant.nom + ' ' + soutenance.etudiant.prenom}"></td>
+            <td th:text="${soutenance.sujet.titre}"></td>
+            <td th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></td>
+            <td th:text="${soutenance.salle.nom}"></td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tableau de bord - Enseignant</title>
+</head>
+<body>
+    <h1>Bienvenue <span th:text="${enseignant.nom}"></span>!</h1>
+    <a href="/logout">Déconnexion</a>
+    
+    <h2>Mes sujets proposés</h2>
+    <a href="/enseignant/proposer-sujet">Proposer un nouveau sujet</a>
+    <table border="1">
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Statut</th>
+        </tr>
+        <tr th:each="sujet : ${sujets}">
+            <td th:text="${sujet.titre}"></td>
+            <td th:text="${sujet.description}"></td>
+            <td th:text="${sujet.valide} ? 'Validé' : 'En attente'"></td>
+        </tr>
+    </table>
+    
+    <h2>Mes soutenances</h2>
+    <table border="1">
+        <tr>
+            <th>Étudiant</th>
+            <th>Date</th>
+            <th>Salle</th>
+            <th>Rôle</th>
+        </tr>
+        <tr th:each="soutenance : ${soutenances}">
+            <td th:text="${soutenance.etudiant.nom + ' ' + soutenance.etudiant.prenom}"></td>
+            <td th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></td>
+            <td th:text="${soutenance.salle.nom}"></td>
+            <td th:text="${soutenance.encadrant.id == enseignant.id} ? 'Encadrant' : 'Membre du jury'"></td>
+        </tr>
+    </table>
+</body>
+</html>
