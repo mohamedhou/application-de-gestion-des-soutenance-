@@ -1,79 +1,403 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord - Administrateur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .title-section h1 {
+            color: #1e3a8a;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .title-section .subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #1e3a8a;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3b82f6;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        table th {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        table tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        table tr:hover td {
+            background: #e0f2fe;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .form-container {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 8px 6px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Tableau de bord administrateur</h1>
-    <a href="/logout">Déconnexion</a>
-    
-    <h2>Sujets à valider</h2>
-    <table border="1">
-        <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Encadrant</th>
-            <th>Action</th>
-        </tr>
-        <tr th:each="sujet : ${sujets}" th:if="${not sujet.valide}">
-            <td th:text="${sujet.titre}"></td>
-            <td th:text="${sujet.description}"></td>
-            <td th:text="${sujet.encadrant.nom + ' ' + sujet.encadrant.prenom}"></td>
-            <td><a th:href="@{/admin/valider-sujet/{id}(id=${sujet.id})}">Valider</a></td>
-        </tr>
-    </table>
-    
-    <h2>Planifier une soutenance</h2>
-    <form th:action="@{/admin/planifier-soutenance}" method="post">
-        <div>
-            <label>Étudiant:</label>
-            <select name="etudiant.id" required>
-                <option th:each="etudiant : ${etudiants}" 
-                        th:value="${etudiant.id}"
-                        th:text="${etudiant.nom + ' ' + etudiant.prenom}"></option>
-            </select>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">FSM</div>
+                <div class="title-section">
+                    <h1>Tableau de bord administrateur</h1>
+                    <div class="subtitle">Faculté des Sciences - Meknès</div>
+                </div>
+            </div>
+            <a href="/logout" class="logout-btn">Déconnexion</a>
         </div>
-        <div>
-            <label>Sujet:</label>
-            <select name="sujet.id" required>
-                <option th:each="sujet : ${sujets}" 
-                        th:value="${sujet.id}"
-                        th:text="${sujet.titre}"></option>
-            </select>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(sujets)}">0</div>
+                <div class="stat-label">Sujets Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(soutenances)}">0</div>
+                <div class="stat-label">Soutenances</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(etudiants)}">0</div>
+                <div class="stat-label">Étudiants</div>
+            </div>
         </div>
-        <div>
-            <label>Date:</label>
-            <input type="date" name="date" required>
+
+        <div class="section">
+            <h2>📋 Sujets à valider</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Encadrant</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="sujet : ${sujets}" th:if="${not sujet.valide}">
+                        <td th:text="${sujet.titre}"></td>
+                        <td th:text="${sujet.description}"></td>
+                        <td th:text="${sujet.encadrant.nom + ' ' + sujet.encadrant.prenom}"></td>
+                        <td>
+                            <a th:href="@{/admin/valider-sujet/{id}(id=${sujet.id})}" class="action-btn">
+                                ✓ Valider
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div>
-            <label>Heure:</label>
-            <input type="time" name="heure" required>
+
+        <div class="section">
+            <h2>📅 Planifier une soutenance</h2>
+            <div class="form-container">
+                <form th:action="@{/admin/planifier-soutenance}" method="post">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>👨‍🎓 Étudiant:</label>
+                            <select name="etudiant.id" required>
+                                <option value="">Sélectionner un étudiant</option>
+                                <option th:each="etudiant : ${etudiants}"
+                                        th:value="${etudiant.id}"
+                                        th:text="${etudiant.nom + ' ' + etudiant.prenom}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📝 Sujet:</label>
+                            <select name="sujet.id" required>
+                                <option value="">Sélectionner un sujet</option>
+                                <option th:each="sujet : ${sujets}"
+                                        th:value="${sujet.id}"
+                                        th:text="${sujet.titre}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>📅 Date:</label>
+                            <input type="date" name="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>🕐 Heure:</label>
+                            <input type="time" name="heure" required>
+                        </div>
+                        <div class="form-group">
+                            <label>🏢 Salle:</label>
+                            <select name="salle.id" required>
+                                <option value="">Sélectionner une salle</option>
+                                <option th:each="salle : ${salles}"
+                                        th:value="${salle.id}"
+                                        th:text="${salle.nom}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">📋 Planifier la soutenance</button>
+                </form>
+            </div>
         </div>
-        <div>
-            <label>Salle:</label>
-            <select name="salle.id" required>
-                <option th:each="salle : ${salles}" 
-                        th:value="${salle.id}"
-                        th:text="${salle.nom}"></option>
-            </select>
+
+        <div class="section">
+            <h2>🎓 Soutenances planifiées</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Étudiant</th>
+                        <th>Sujet</th>
+                        <th>Date</th>
+                        <th>Salle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="soutenance : ${soutenances}">
+                        <td th:text="${soutenance.etudiant.nom + ' ' + soutenance.etudiant.prenom}"></td>
+                        <td th:text="${soutenance.sujet.titre}"></td>
+                        <td th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${soutenance.salle.nom}"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <button type="submit">Planifier</button>
-    </form>
-    
-    <h2>Soutenances planifiées</h2>
-    <table border="1">
-        <tr>
-            <th>Étudiant</th>
-            <th>Sujet</th>
-            <th>Date</th>
-            <th>Salle</th>
-        </tr>
-        <tr th:each="soutenance : ${soutenances}">
-            <td th:text="${soutenance.etudiant.nom + ' ' + soutenance.etudiant.prenom}"></td>
-            <td th:text="${soutenance.sujet.titre}"></td>
-            <td th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></td>
-            <td th:text="${soutenance.salle.nom}"></td>
-        </tr>
-    </table>
+    </div>
 </body>
 </html>
