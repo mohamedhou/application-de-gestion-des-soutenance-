@@ -1,5 +1,6 @@
 package com.fsm.Soutenances.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,9 +13,14 @@ public class Personne {
     private Long id;
     private String nom;
     private String prenom;
+    
+    @Column(unique = true, nullable = false)
     private String email;
+    
+    @Column(nullable = false)
+    private String password; // Ajout du champ password
 
-    // Ajout manuel des getters/setters
+    // Getters et setters
     public Long getId() {
         return id;
     }
@@ -45,5 +51,13 @@ public class Personne {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

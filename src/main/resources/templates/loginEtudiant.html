@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Étudiant - FSM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 25%, #7dd3fc 50%, #38bdf8 75%, #0ea5e9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background decorative elements */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        /* University logo in background */
+        .background-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            opacity: 0.05;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="none"/><g fill="%23ffffff"><circle cx="200" cy="150" r="80" fill="none" stroke="%23ffffff" stroke-width="6"/><rect x="160" y="220" width="80" height="120" fill="none" stroke="%23ffffff" stroke-width="6"/><rect x="140" y="220" width="120" height="20"/><rect x="120" y="340" width="160" height="20"/><polygon points="120,240 200,180 280,240" fill="none" stroke="%23ffffff" stroke-width="6"/><circle cx="200" cy="150" r="20"/><text x="200" y="380" text-anchor="middle" font-size="24" font-weight="bold">FSM</text></g></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 20px 40px rgba(14, 165, 233, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .main-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .main-logo svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+
+        .login-container h2 {
+            color: #0369a1;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .university-name {
+            color: #0284c7;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e1f5fe;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+            transform: translateY(-1px);
+            background: white;
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+            margin-bottom: 25px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(14, 165, 233, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .error {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border: 1px solid #fca5a5;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .login-links {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .login-links p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .login-links a {
+            display: inline-block;
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .login-links a:hover {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: rgba(14, 165, 233, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Floating particles effect */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: floatParticle 15s infinite linear;
+            pointer-events: none;
+        }
+
+        .particle:nth-child(1) {
+            width: 4px;
+            height: 4px;
+            top: 20%;
+            left: 10%;
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(2) {
+            width: 6px;
+            height: 6px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -8s;
+        }
+
+        .particle:nth-child(3) {
+            width: 3px;
+            height: 3px;
+            top: 80%;
+            left: 20%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 20px;
+                padding: 30px 25px;
+            }
+
+            .main-logo {
+                width: 70px;
+                height: 70px;
+            }
+
+            .login-container h2 {
+                font-size: 24px;
+            }
+
+            .background-logo {
+                width: 300px;
+                height: 300px;
+                opacity: 0.03;
+            }
+        }
+
+        /* Loading animation for form submission */
+        .login-btn.loading {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            cursor: not-allowed;
+        }
+
+        .login-btn.loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background decorative elements -->
+    <div class="background-logo"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="login-container">
+        <div class="header-section">
+            <div class="logo-container">
+                <div class="main-logo">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+                    </svg>
+                </div>
+                <h2>Connexion Étudiant</h2>
+                <div class="subtitle">Accédez à votre espace personnel</div>
+                <div class="university-name">Faculté des Sciences - Meknès</div>
+            </div>
+        </div>
+
+        <form action="/loginEtudiant" method="post" id="loginForm">
+            <div class="form-group">
+                <label for="email">📧 Adresse email universitaire:</label>
+                <input type="email" 
+                       name="email" 
+                       id="email"
+                       placeholder="prenom.nom@edu.umi.ac.ma"
+					   th:value="${lastEmail}"
+                       required
+                       autocomplete="email">
+            </div>
+			<div class="form-group">
+			    <label>Mot de passe:</label>
+			    <input type="password" name="password" required>
+			</div>
+            
+            <button type="submit" class="login-btn" id="loginButton">
+                🔐 Se connecter
+            </button>
+        </form>
+
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+        
+        <div class="login-links">
+			<p>Vous êtes un membre du personnel ?</p>
+			<a href="https://my.umi.ac.ma/#/myumi/login" target="_blank">🔐 Oublié le mot de passe ?</a>
+
+        </div>
+    </div>
+
+    <script>
+        // Form submission with loading state
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const button = document.getElementById('loginButton');
+            const email = document.getElementById('email').value.trim();
+            
+            // Basic email validation
+            if (!email || !email.includes('@')) {
+                e.preventDefault();
+                return;
+            }
+            
+            // Add loading state
+            button.classList.add('loading');
+            button.textContent = 'Connexion en cours...';
+            button.disabled = true;
+        });
+
+        // Email input enhancement
+        const emailInput = document.getElementById('email');
+        emailInput.addEventListener('input', function() {
+            // Auto-suggest university domain
+            if (this.value && !this.value.includes('@') && this.value.length > 3) {
+                // Could add auto-complete functionality here
+            }
+        });
+
+        // Add some interactive particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            particle.style.width = particle.style.height = (Math.random() * 4 + 2) + 'px';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 25000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 3000);
+    </script>
+</body>
+</html>
