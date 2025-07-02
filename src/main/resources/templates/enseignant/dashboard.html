@@ -45,16 +45,24 @@
 <body>
     <div class="container">
         <!-- Header Section (Pas de changement) -->
-        <div class="header">
-            <div class="logo-section">
-                <div class="logo">FSM</div>
-                <div class="welcome-section">
-                    <h1>Bienvenue <span th:text="${enseignant.prenom + ' ' + enseignant.nom}"></span>!</h1>
-                    <div class="subtitle">Faculté des Sciences - Meknès</div>
-                </div>
-            </div>
-            <a th:href="@{/logout}" class="logout-btn">Déconnexion</a>
-        </div>
+		<!-- F enseignant/dashboard.html -->
+		<div class="header">
+		    <div class="logo-section">
+		        <div class="logo">FSM</div>
+		        <div class="welcome-section">
+		            <h1>Bienvenue <span th:text="${enseignant.prenom + ' ' + enseignant.nom}"></span>!</h1>
+		            <div class="subtitle">Faculté des Sciences - Meknès</div>
+		        </div>
+		    </div>
+
+		    <!-- HNA FIN ZEDNA L'BOUTONS -->
+		    <div style="display: flex; gap: 15px;">
+				<!-- F dashboard.html, zid had l'bouton f header متلا -->
+				<a th:href="@{/enseignant/calendrier-disponibilites}" class="add-btn">📅 Gérer mes indisponibilités</a>
+				 <a th:href="@{/enseignant/disponibilites}" class="add-btn" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);">📅 Déclarer Disponibilités</a>
+		        <a th:href="@{/logout}" class="logout-btn">Déconnexion</a>
+		    </div>
+		</div>
 
         <!-- Stats Grid Section (CORRECTION ICI) -->
         <div class="stats-grid">
@@ -111,9 +119,6 @@
             </table>
         </div>
 
-        <!-- ========================================================================= -->
-        <!-- NOUVELLE SECTION POUR LES SOUTENANCES ENCADRÉES -->
-        <!-- ========================================================================= -->
         <div class="section">
             <div class="section-header">
                 <h2>👨‍🏫 Mes Soutenances Encadrées</h2>
@@ -142,9 +147,6 @@
             </table>
         </div>
 
-        <!-- ========================================================================= -->
-        <!-- NOUVELLE SECTION POUR LES SOUTENANCES EN TANT QUE JURY -->
-        <!-- ========================================================================= -->
         <div class="section">
             <div class="section-header">
                 <h2>👨‍⚖️ Mes Soutenances en tant que Jury</h2>

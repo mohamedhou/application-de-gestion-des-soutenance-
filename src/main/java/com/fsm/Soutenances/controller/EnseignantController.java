@@ -4,6 +4,7 @@ import com.fsm.Soutenances.model.Enseignant;
 import com.fsm.Soutenances.model.Sujet;
 import com.fsm.Soutenances.repository.SoutenanceRepository;
 import com.fsm.Soutenances.repository.SujetRepository;
+import com.fsm.Soutenances.service.CreneauIndisponibleService;
 import com.fsm.Soutenances.service.EnseignantService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,17 +62,64 @@ public class EnseignantController {
     public String proposerSujet(@ModelAttribute Sujet sujet, HttpSession session) {
         Object user = session.getAttribute("user");
         if (!(user instanceof Enseignant)) {
-            // CORRECTION: Redirection vers la page de login spécifique
+            return "redirect:/login-enseignant";
+        }
+        
+        Enseignant enseignant = (Enseignant) user; 
+        
+        sujet.setEncadrant(enseignant);
+        sujet.setValide(false); // Par defaut, un sujet n'est pas valide
+        sujetRepository.save(sujet);
+        return "redirect:/enseignant/dashboard";
+    }
+    
+ // F EnseignantController.java 
+
+    @GetMapping("/disponibilites")
+    public String showDisponibilitesForm(HttpSession session, Model model) {
+        Object user = session.getAttribute("user");
+        if (!(user instanceof Enseignant)) {
             return "redirect:/login-enseignant";
         }
         
         Enseignant enseignant = (Enseignant) user;
-        // Pas besoin de refaire un findById, l'objet dans la session est souvent suffisant
-        // enseignant = enseignantService.findById(enseignant.getId()); 
+        // Nṣifto les disponibilités l'7aliyin l la page bach ybanou
+        model.addAttribute("disponibilitesActuelles", enseignant.getDisponibilites());
         
-        sujet.setEncadrant(enseignant);
-        sujet.setValide(false); // Par défaut, un sujet n'est pas validé
-        sujetRepository.save(sujet);
-        return "redirect:/enseignant/dashboard";
+        return "enseignant/disponibilites"; // Ghadi nṣaybo had l'fichier HTML
     }
+
+    @PostMapping("/disponibilites")
+    public String saveDisponibilites(@RequestParam("disponibilitesText") String disponibilitesText, 
+                                     HttpSession session) {
+        Object user = session.getAttribute("user");
+        if (!(user instanceof Enseignant)) {
+            return "redirect:/login-enseignant";
+        }
+
+        Enseignant enseignant = (Enseignant) user;
+        
+        enseignantService.enregistrerDisponibilites(enseignant, disponibilitesText);
+        
+        return "redirect:/enseignant/dashboard?success=dispo_saved";
+    }
+ // ... Injecter le nouveau service ...
+    @Autowired private CreneauIndisponibleService creneauService;
+
+  
+    @GetMapping("/calendrier-disponibilites")
+    public String showCalendrierPage(HttpSession session, Model model) {
+        Object user = session.getAttribute("user");
+        if (!(user instanceof Enseignant)) {
+            return "redirect:/login-enseignant";
+        }
+        
+        Enseignant enseignant = (Enseignant) user;
+        // On passe l'ID de l'enseignant à la vue pour que le JavaScript puisse l'utiliser
+        model.addAttribute("enseignantId", enseignant.getId());
+        
+        return "enseignant/calendrier_disponibilites"; // Le nom du nouveau fichier HTML
+    }
+    
+    
 }

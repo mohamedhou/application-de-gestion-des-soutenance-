@@ -1,6 +1,8 @@
 package com.fsm.Soutenances.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.*;	
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,7 +14,8 @@ public class Enseignant extends Personne {
     private Long id;
     
     private String specialite;
-    private String disponibilites;
+  
+    private String disponibilites;;
 
     // Getters et setters pour l'ID
     public Long getId() {
