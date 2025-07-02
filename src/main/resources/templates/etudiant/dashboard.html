@@ -1,69 +1,503 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord Étudiant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .welcome-section h1 {
+            color: #1e3a8a;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .welcome-section .subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .notification {
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #1e3a8a;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3b82f6;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        table th {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        table tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        table tr:hover td {
+            background: #e0f2fe;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .subject-card {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #3b82f6;
+            margin-bottom: 20px;
+        }
+
+        .subject-title {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .subject-description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .defense-card {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #f59e0b;
+            margin-bottom: 20px;
+        }
+
+        .defense-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .action-card-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .action-card-title {
+            color: #1e3a8a;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .action-card a {
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .action-card a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .status-submitted {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .no-defense {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .no-defense-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        .no-defense-text {
+            color: #92400e;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .defense-info {
+                grid-template-columns: 1fr;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 8px 6px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Bienvenue <span th:text="${etudiant.nom}"></span>!</h1>
-    <a href="/logout">Déconnexion</a>
-    
-    <div th:if="${param.success}">
-        <div th:switch="${param.success}">
-            <p th:case="'rapport_soumis'">Rapport soumis avec succès!</p>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">FSM</div>
+                <div class="welcome-section">
+                    <h1>Bienvenue <span th:text="${etudiant.nom}"></span>!</h1>
+                    <div class="subtitle">Faculté des Sciences - Meknès</div>
+                </div>
+            </div>
+            <a href="/logout" class="logout-btn">Déconnexion</a>
         </div>
-    </div>
-    
-    <div th:if="${param.error}">
-        <div th:switch="${param.error}">
-            <p th:case="'no_soutenance'">Aucune soutenance planifiée</p>
-            <p th:case="'upload_failed'">Échec du téléversement du rapport</p>
+
+        <!-- Notifications -->
+        <div th:if="${param.success}" class="notification success">
+            <div th:switch="${param.success}">
+                <span th:case="'rapport_soumis'">✅ Rapport soumis avec succès!</span>
+            </div>
         </div>
-    </div>
-    
-    <div th:if="${!hasSujet}">
-        <h2>Sujets disponibles</h2>
-        <table border="1">
-            <tr>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>Action</th>
-            </tr>
-            <tr th:each="sujet : ${sujets}">
-                <td th:text="${sujet.titre}"></td>
-                <td th:text="${sujet.description}"></td>
-                <td><a th:href="@{/etudiant/choisir-sujet/{id}(id=${sujet.id})}">Choisir</a></td>
-            </tr>
-        </table>
-    </div>
-    
-    <div th:if="${hasSujet}">
-        <h2>Mon sujet</h2>
-        <p>Titre: <span th:text="${etudiant.sujet.titre}"></span></p>
-        <p>Description: <span th:text="${etudiant.sujet.description}"></span></p>
         
-        <div th:if="${soutenance}">
-            <h2>Ma soutenance</h2>
-            <p>Date: <span th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></span></p>
-            <p>Heure: <span th:text="${#temporals.format(soutenance.date, 'HH:mm')}"></span></p>
-            <p>Salle: <span th:text="${soutenance.salle.nom}"></span></p>
-            
-            <div>
-                <a th:href="@{/etudiant/telecharger-convocation}">Télécharger la convocation</a>
-            </div>
-            
-            <div>
-                <a th:href="@{/etudiant/consulter-soutenance}">Consulter les détails de la soutenance</a>
-            </div>
-            
-            <div th:if="${!hasRapport}">
-                <a th:href="@{/etudiant/soumettre-rapport}">Soumettre mon rapport</a>
-            </div>
-            <div th:if="${hasRapport}">
-                <p>Rapport déjà soumis</p>
+        <div th:if="${param.error}" class="notification error">
+            <div th:switch="${param.error}">
+                <span th:case="'no_soutenance'">❌ Aucune soutenance planifiée</span>
+                <span th:case="'upload_failed'">❌ Échec du téléversement du rapport</span>
             </div>
         </div>
-        <div th:unless="${soutenance}">
-            <p>Votre soutenance n'a pas encore été planifiée</p>
+
+        <!-- Available Subjects Section -->
+        <div th:if="${!hasSujet}" class="section">
+            <h2>📚 Sujets disponibles</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="sujet : ${sujets}">
+                        <td th:text="${sujet.titre}"></td>
+                        <td th:text="${sujet.description}"></td>
+                        <td>
+                            <a th:href="@{/etudiant/choisir-sujet/{id}(id=${sujet.id})}" class="action-btn">
+                                ✓ Choisir
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- My Subject Section -->
+        <div th:if="${hasSujet}" class="section">
+            <h2>📖 Mon sujet</h2>
+            <div class="subject-card">
+                <div class="subject-title" th:text="${etudiant.sujet.titre}"></div>
+                <div class="subject-description" th:text="${etudiant.sujet.description}"></div>
+            </div>
+
+            <!-- Defense Section -->
+            <div th:if="${soutenance}">
+                <h2>🎓 Ma soutenance</h2>
+                <div class="defense-card">
+                    <div class="defense-info">
+                        <div class="info-item">
+                            <div class="info-icon">📅</div>
+                            <div class="info-content">
+                                <div class="info-label">Date</div>
+                                <div class="info-value" th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">🕐</div>
+                            <div class="info-content">
+                                <div class="info-label">Heure</div>
+                                <div class="info-value" th:text="${#temporals.format(soutenance.date, 'HH:mm')}"></div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">🏢</div>
+                            <div class="info-content">
+                                <div class="info-label">Salle</div>
+                                <div class="info-value" th:text="${soutenance.salle.nom}"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-grid">
+                        <div class="action-card">
+                            <div class="action-card-icon">📄</div>
+                            <div class="action-card-title">Convocation</div>
+                            <a th:href="@{/etudiant/telecharger-convocation}">Télécharger</a>
+                        </div>
+                        <div class="action-card">
+                            <div class="action-card-icon">👁️</div>
+                            <div class="action-card-title">Détails</div>
+                            <a th:href="@{/etudiant/consulter-soutenance}">Consulter</a>
+                        </div>
+                        <div class="action-card" th:if="${!hasRapport}">
+                            <div class="action-card-icon">📝</div>
+                            <div class="action-card-title">Rapport</div>
+                            <a th:href="@{/etudiant/soumettre-rapport}">Soumettre</a>
+                        </div>
+                        <div class="action-card" th:if="${hasRapport}">
+                            <div class="action-card-icon">✅</div>
+                            <div class="action-card-title">Rapport</div>
+                            <div class="status-submitted">
+                                ✓ Déjà soumis
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Defense Section -->
+            <div th:unless="${soutenance}" class="no-defense">
+                <div class="no-defense-icon">⏳</div>
+                <div class="no-defense-text">Votre soutenance n'a pas encore été planifiée</div>
+            </div>
         </div>
     </div>
 </body>

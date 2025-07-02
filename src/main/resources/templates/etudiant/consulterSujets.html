@@ -1,23 +1,395 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des sujets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .title-section h1 {
+            color: #1e3a8a;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .title-section .subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #1e3a8a;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3b82f6;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+
+        .stats-bar {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3b82f6;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #374151;
+            font-weight: 600;
+        }
+
+        .stats-number {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        table th {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        table tr:hover td {
+            background: #e0f2fe;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .subject-title {
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .subject-description {
+            color: #64748b;
+            line-height: 1.5;
+            max-width: 400px;
+        }
+
+        .supervisor-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .supervisor-name {
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .empty-state-subtext {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #3b82f6;
+            background: white;
+            color: #3b82f6;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 10px 8px;
+            }
+
+            .subject-description {
+                max-width: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Sujets disponibles</h1>
-    <a th:href="@{/etudiant/dashboard}">Retour au tableau de bord</a>
-    
-    <table border="1">
-        <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Encadrant</th>
-        </tr>
-        <tr th:each="sujet : ${sujets}">
-            <td th:text="${sujet.titre}"></td>
-            <td th:text="${sujet.description}"></td>
-            <td th:text="${sujet.encadrant.nom + ' ' + sujet.encadrant.prenom}"></td>
-        </tr>
-    </table>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">FSM</div>
+                <div class="title-section">
+                    <h1>Sujets disponibles</h1>
+                    <div class="subtitle">Faculté des Sciences - Meknès</div>
+                </div>
+            </div>
+            <a th:href="@{/etudiant/dashboard}" class="back-btn">
+                ← Retour au tableau de bord
+            </a>
+        </div>
+
+        <div class="section">
+            <div class="stats-bar">
+                <div class="stats-item">
+                    📊 <span class="stats-number" th:text="${#lists.size(sujets)}">0</span> Sujets disponibles
+                </div>
+                <div class="stats-item">
+                    👨‍🏫 <span class="stats-number" th:text="${#lists.size(#sets.toSet(sujets.![encadrant]))}">0</span> Encadrants
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="🔍 Rechercher un sujet par titre ou description..." id="searchInput">
+                <button class="filter-btn" onclick="toggleFilter()">🔧 Filtres</button>
+            </div>
+
+            <h2>📚 Liste des sujets de recherche</h2>
+            
+            <div th:if="${#lists.isEmpty(sujets)}" class="empty-state">
+                <div class="empty-state-icon">📄</div>
+                <div class="empty-state-text">Aucun sujet disponible</div>
+                <div class="empty-state-subtext">Les sujets de recherche apparaîtront ici une fois validés par l'administration</div>
+            </div>
+            
+            <table th:if="${not #lists.isEmpty(sujets)}" id="subjectsTable">
+                <thead>
+                    <tr>
+                        <th>📝 Titre</th>
+                        <th>📋 Description</th>
+                        <th>👨‍🏫 Encadrant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="sujet : ${sujets}">
+                        <td>
+                            <div class="subject-title" th:text="${sujet.titre}"></div>
+                        </td>
+                        <td>
+                            <div class="subject-description" th:text="${sujet.description}"></div>
+                        </td>
+                        <td>
+                            <div class="supervisor-info">
+                                <span>👨‍🏫</span>
+                                <span class="supervisor-name" th:text="${sujet.encadrant.nom + ' ' + sujet.encadrant.prenom}"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const table = document.getElementById('subjectsTable');
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                const title = rows[i].cells[0].textContent.toLowerCase();
+                const description = rows[i].cells[1].textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+
+        function toggleFilter() {
+            alert('Fonctionnalité de filtrage à venir!');
+        }
+    </script>
 </body>
 </html>

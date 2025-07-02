@@ -1,28 +1,397 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détails de la soutenance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .title-section h1 {
+            color: #1e3a8a;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .title-section .subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #1e3a8a;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3b82f6;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-label {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-value {
+            color: #1e3a8a;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .subject-card {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #3b82f6;
+            margin-top: 10px;
+        }
+
+        .subject-title {
+            color: #1e3a8a;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subject-description {
+            color: #374151;
+            line-height: 1.6;
+            font-size: 16px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .jury-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .jury-member {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 3px solid #3b82f6;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .jury-member:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .jury-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .jury-name {
+            color: #1e3a8a;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .countdown-timer {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .countdown-number {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .empty-state-subtext {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .jury-list {
+                grid-template-columns: 1fr;
+            }
+
+            .title-section h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Détails de votre soutenance</h1>
-    <a th:href="@{/etudiant/dashboard}">Retour au tableau de bord</a>
-    
-    <div th:if="${soutenance}">
-        <h2>Informations générales</h2>
-        <p>Date: <span th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></span></p>
-        <p>Heure: <span th:text="${#temporals.format(soutenance.date, 'HH:mm')}"></span></p>
-        <p>Salle: <span th:text="${soutenance.salle.nom}"></span></p>
-        
-        <h2>Sujet</h2>
-        <p>Titre: <span th:text="${soutenance.sujet.titre}"></span></p>
-        <p>Description: <span th:text="${soutenance.sujet.description}"></span></p>
-        
-        <h2>Jury</h2>
-        <ul>
-            <li th:each="membre : ${soutenance.juryEnseignants}">
-                <span th:text="${membre.nom + ' ' + membre.prenom}"></span>
-            </li>
-        </ul>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">FSM</div>
+                <div class="title-section">
+                    <h1>Détails de votre soutenance</h1>
+                    <div class="subtitle">Faculté des Sciences - Meknès</div>
+                </div>
+            </div>
+            <a th:href="@{/etudiant/dashboard}" class="back-btn">
+                ← Retour au tableau de bord
+            </a>
+        </div>
+
+        <div th:if="${soutenance}">
+            <div class="countdown-timer">
+                ⏰ Votre soutenance est programmée
+                <div class="countdown-number" th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy à HH:mm')}"></div>
+            </div>
+
+            <div class="section">
+                <h2>📅 Informations générales</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-label">
+                            📅 Date de soutenance
+                        </div>
+                        <div class="info-value" th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            🕐 Heure
+                        </div>
+                        <div class="info-value" th:text="${#temporals.format(soutenance.date, 'HH:mm')}"></div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">
+                            🏢 Salle
+                        </div>
+                        <div class="info-value" th:text="${soutenance.salle.nom}"></div>
+                    </div>
+                </div>
+                <div class="status-badge">
+                    ✅ Soutenance confirmée
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📝 Sujet de recherche</h2>
+                <div class="subject-card">
+                    <div class="subject-title">
+                        🎯 <span th:text="${soutenance.sujet.titre}"></span>
+                    </div>
+                    <div class="subject-description" th:text="${soutenance.sujet.description}"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>👨‍⚖️ Composition du jury</h2>
+                <div class="jury-list">
+                    <div th:each="membre : ${soutenance.juryEnseignants}" class="jury-member">
+                        <div class="jury-avatar" th:text="${#strings.substring(membre.nom, 0, 1) + #strings.substring(membre.prenom, 0, 1)}"></div>
+                        <div class="jury-name" th:text="${membre.nom + ' ' + membre.prenom}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:unless="${soutenance}" class="section">
+            <div class="empty-state">
+                <div class="empty-state-icon">📅</div>
+                <div class="empty-state-text">Aucune soutenance programmée</div>
+                <div class="empty-state-subtext">Votre soutenance sera programmée par l'administration une fois votre sujet validé</div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Add some interactivity for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation delays for cards
+            const cards = document.querySelectorAll('.info-card, .jury-member');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Add current time display
+            function updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('fr-FR');
+                document.title = `Soutenance - ${timeString}`;
+            }
+            
+            setInterval(updateTime, 1000);
+        });
+    </script>
 </body>
 </html>

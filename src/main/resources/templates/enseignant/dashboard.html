@@ -3,158 +3,401 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord - Enseignant</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Tableau de bord - Enseignant</title>
     <style>
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .profile-header {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 10px;
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .welcome-section h1 {
+            color: #1e3a8a;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .welcome-section .subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3b82f6;
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+
+        .section h2 {
+            color: #1e3a8a;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        table th {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        table tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        table tr:hover td {
+            background: #e0f2fe;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .status-validated {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .role-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .role-supervisor {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .role-jury {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
             margin-bottom: 30px;
         }
-        .action-card {
-            height: 100%;
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+            transition: all 0.3s ease;
         }
-        .action-icon {
-            font-size: 2.5rem;
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
             margin-bottom: 15px;
-            color: #2575fc;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-subtext {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 8px 6px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container py-4">
-        <!-- En-tête profil -->
-        <div class="profile-header text-center">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2>Tableau de Bord Enseignant</h2>
-                <div>
-                    <a href="/logout" class="btn btn-light btn-sm">
-                        <i class="fas fa-sign-out-alt"></i> Déconnexion
-                    </a>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">FSM</div>
+                <div class="welcome-section">
+                    <h1>Bienvenue <span th:text="${enseignant.nom}"></span>!</h1>
+                    <div class="subtitle">Faculté des Sciences - Meknès</div>
                 </div>
             </div>
-            <h3>Bienvenue, <span th:text="${enseignant.prenom + ' ' + enseignant.nom}"></span></h3>
-            <p class="mb-0">Email: <span th:text="${enseignant.email}"></span></p>
+            <a href="/logout" class="logout-btn">Déconnexion</a>
         </div>
 
-        <!-- Cartes d'actions -->
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card card-hover action-card text-center p-4">
-                    <i class="fas fa-book action-icon"></i>
-                    <h4>Proposer un sujet</h4>
-                    <p>Ajouter un nouveau sujet pour les étudiants</p>
-                    <a href="/enseignant/proposer-sujet" class="btn btn-primary mt-2">
-                        <i class="fas fa-plus-circle"></i> Ajouter
-                    </a>
-                </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(sujets)}">0</div>
+                <div class="stat-label">Mes Sujets</div>
             </div>
-            
-            <div class="col-md-4">
-                <div class="card card-hover action-card text-center p-4">
-                    <i class="fas fa-user-graduate action-icon"></i>
-                    <h4>Sujets encadrés</h4>
-                    <p>Consulter vos sujets en cours</p>
-                    <a href="/enseignant/sujets-encadres" class="btn btn-info mt-2">
-                        <i class="fas fa-eye"></i> Voir
-                    </a>
-                </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(soutenances)}">0</div>
+                <div class="stat-label">Mes Soutenances</div>
             </div>
-            
-            <div class="col-md-4">
-                <div class="card card-hover action-card text-center p-4">
-                    <i class="fas fa-gavel action-icon"></i>
-                    <h4>Soutenances (juré)</h4>
-                    <p>Soutenances où vous êtes membre du jury</p>
-                    <a href="/enseignant/soutenances-jure" class="btn btn-warning mt-2">
-                        <i class="fas fa-list"></i> Consulter
-                    </a>
-                </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(sujets.?[valide == true])}">0</div>
+                <div class="stat-label">Sujets Validés</div>
             </div>
-            
-            <div class="col-md-4">
-                <div class="card card-hover action-card text-center p-4">
-                    <i class="fas fa-chalkboard-teacher action-icon"></i>
-                    <h4>Soutenances encadrées</h4>
-                    <p>Soutenances que vous encadrez</p>
-                    <a href="/enseignant/soutenances-encadrees" class="btn btn-success mt-2">
-                        <i class="fas fa-chart-line"></i> Suivre
-                    </a>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card card-hover action-card text-center p-4">
-                    <i class="fas fa-file-pdf action-icon"></i>
-                    <h4>Rapports étudiants</h4>
-                    <p>Consulter les rapports de stage</p>
-                    <a href="/enseignant/rapports-etudiants" class="btn btn-danger mt-2">
-                        <i class="fas fa-download"></i> Télécharger
-                    </a>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="card card-hover action-card text-center p-4">
-                    <i class="fas fa-calendar-check action-icon"></i>
-                    <h4>Mes disponibilités</h4>
-                    <p>Déclarer vos créneaux disponibles</p>
-                    <a href="/enseignant/disponibilites" class="btn btn-secondary mt-2">
-                        <i class="fas fa-edit"></i> Modifier
-                    </a>
-                </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${#lists.size(sujets.?[valide == false])}">0</div>
+                <div class="stat-label">En Attente</div>
             </div>
         </div>
 
-        <!-- Dernières activités -->
-        <div class="row mt-5">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="fas fa-book me-2"></i>Derniers sujets proposés</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li th:each="sujet : ${sujets}" class="list-group-item">
-                                <h6 th:text="${sujet.titre}"></h6>
-                                <p class="mb-1" th:text="${sujet.description}"></p>
-                                <small class="text-muted" th:text="${sujet.domaine}"></small>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+        <div class="section">
+            <div class="section-header">
+                <h2>📝 Mes sujets proposés</h2>
+                <a href="/enseignant/proposer-sujet" class="add-btn">
+                    ➕ Proposer un nouveau sujet
+                </a>
             </div>
             
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Prochaines soutenances</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li th:each="soutenance : ${soutenances}" class="list-group-item">
-                                <h6 th:text="${soutenance.etudiant.prenom + ' ' + soutenance.etudiant.nom}"></h6>
-                                <p class="mb-1" th:text="${soutenance.sujet.titre}"></p>
-                                <small class="text-muted">
-                                    Le <span th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy à HH:mm')}"></span>
-                                    en <span th:text="${soutenance.salle.nom}"></span>
-                                </small>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <div th:if="${#lists.isEmpty(sujets)}" class="empty-state">
+                <div class="empty-state-icon">📄</div>
+                <div class="empty-state-text">Aucun sujet proposé</div>
+                <div class="empty-state-subtext">Commencez par proposer votre premier sujet de recherche</div>
             </div>
+            
+            <table th:if="${not #lists.isEmpty(sujets)}">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="sujet : ${sujets}">
+                        <td th:text="${sujet.titre}"></td>
+                        <td th:text="${sujet.description}"></td>
+                        <td>
+                            <span th:class="${sujet.valide} ? 'status-badge status-validated' : 'status-badge status-pending'"
+                                  th:text="${sujet.valide} ? '✓ Validé' : '⏳ En attente'"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>🎓 Mes soutenances</h2>
+            </div>
+            
+            <div th:if="${#lists.isEmpty(soutenances)}" class="empty-state">
+                <div class="empty-state-icon">📅</div>
+                <div class="empty-state-text">Aucune soutenance programmée</div>
+                <div class="empty-state-subtext">Les soutenances apparaîtront ici une fois planifiées</div>
+            </div>
+            
+            <table th:if="${not #lists.isEmpty(soutenances)}">
+                <thead>
+                    <tr>
+                        <th>Étudiant</th>
+                        <th>Date</th>
+                        <th>Salle</th>
+                        <th>Rôle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="soutenance : ${soutenances}">
+                        <td th:text="${soutenance.etudiant.nom + ' ' + soutenance.etudiant.prenom}"></td>
+                        <td th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${soutenance.salle.nom}"></td>
+                        <td>
+                            <span th:class="${soutenance.encadrant.id == enseignant.id} ? 'role-badge role-supervisor' : 'role-badge role-jury'"
+                                  th:text="${soutenance.encadrant.id == enseignant.id} ? '👨‍🏫 Encadrant' : '👨‍⚖️ Membre du jury'"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
