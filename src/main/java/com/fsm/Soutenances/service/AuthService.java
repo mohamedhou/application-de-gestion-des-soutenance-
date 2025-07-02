@@ -14,30 +14,28 @@ public class AuthService {
     @Autowired private AdministrateurRepository adminRepository;
 
     public Object authenticate(String email, String password, String role) {
-        switch (role) {
+        switch (role.toLowerCase()) {
             case "etudiant":
                 Optional<Etudiant> etudiant = etudiantRepository.findByEmail(email);
                 if (etudiant.isPresent() && etudiant.get().getPassword().equals(password)) {
                     return etudiant.get();
                 }
-                return null;
+                break;
                 
             case "enseignant":
                 Optional<Enseignant> enseignant = enseignantRepository.findByEmail(email);
                 if (enseignant.isPresent() && enseignant.get().getPassword().equals(password)) {
                     return enseignant.get();
                 }
-                return null;
+                break;
                 
             case "admin":
                 Optional<Administrateur> admin = adminRepository.findByEmail(email);
                 if (admin.isPresent() && admin.get().getPassword().equals(password)) {
                     return admin.get();
                 }
-                return null;
-                
-            default:
-                return null;
+                break;
         }
+        return null;
     }
 }

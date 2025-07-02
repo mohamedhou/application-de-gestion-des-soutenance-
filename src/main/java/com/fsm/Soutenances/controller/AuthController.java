@@ -12,79 +12,107 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthController {
 
-    @Autowired 
-    private AuthService authService;
+    private final AuthService authService;
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/loginEtudiant";
+    @Autowired
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
-    @GetMapping("/loginEtudiant")
-    public String loginEtudiantForm() {
+    // Pages de login spécifiques
+    @GetMapping("/login-etudiant")
+    public String showLoginEtudiant() {
         return "loginEtudiant";
     }
 
-    @GetMapping("/loginEnseignant")
-    public String loginEnseignantForm() {
+    @GetMapping("/login-enseignant")
+    public String showLoginEnseignant() {
         return "loginEnseignant";
     }
 
-    @GetMapping("/loginAdmin")
-    public String loginAdminForm() {
+    @GetMapping("/login-admin")
+    public String showLoginAdmin() {
         return "loginAdmin";
     }
 
-    @PostMapping("/loginEtudiant")
-    public String loginEtudiant(
-            @RequestParam String email,
-            @RequestParam String password,
-            HttpSession session,
-            Model model) {
-        
-        Object user = authService.authenticate(email, password, "etudiant");
-        return handleLogin(user, "etudiant", session, model, "loginEtudiant", email);
+    // Points d'authentification spécifiques
+    @PostMapping("/login-etudiant")
+    public String loginEtudiant(@RequestParam String email,
+                               @RequestParam String password,
+                               HttpSession session,
+                               Model model) {
+        return authenticateUser(email, password, "etudiant", session, model);
     }
 
-    @PostMapping("/loginEnseignant")
-    public String loginEnseignant(
-            @RequestParam String email,
-            @RequestParam String password,
-            HttpSession session,
-            Model model) {
-        
-        Object user = authService.authenticate(email, password, "enseignant");
-        return handleLogin(user, "enseignant", session, model, "loginEnseignant", email);
+    @PostMapping("/login-enseignant")
+    public String loginEnseignant(@RequestParam String email,
+                                 @RequestParam String password,
+                                 HttpSession session,
+                                 Model model) {
+        return authenticateUser(email, password, "enseignant", session, model);
     }
 
-    @PostMapping("/loginAdmin")
-    public String loginAdmin(
-            @RequestParam String email,
-            @RequestParam String password,
-            HttpSession session,
-            Model model) {
-        
-        Object user = authService.authenticate(email, password, "admin");
-        return handleLogin(user, "admin", session, model, "loginAdmin", email);
+    @PostMapping("/login-admin")
+    public String loginAdmin(@RequestParam String email,
+                            @RequestParam String password,
+                            HttpSession session,
+                            Model model) {
+        return authenticateUser(email, password, "admin", session, model);
     }
 
-    private String handleLogin(Object user, String role, 
-                              HttpSession session, Model model, 
-                              String loginPage, String email) {
+    // Méthode centrale d'authentification
+    private String authenticateUser(String email, String password, String role,
+                                  HttpSession session, Model model) {
+        Object user = authService.authenticate(email, password, role);
+        
         if (user != null) {
+            // Authentification réussie
             session.setAttribute("user", user);
-            session.setAttribute("role", role);
-            return "redirect:/" + role + "/dashboard";
+            
+            // Récupération de l'URL originale demandée
+            String originalUrl = (String) session.getAttribute("originalUrl");
+            if (originalUrl != null && !originalUrl.isEmpty()) {
+                session.removeAttribute("originalUrl");
+                return "redirect:" + originalUrl;
+            }
+            
+            // Redirection par défaut selon le rôle
+            switch (role) {
+                case "etudiant":
+                    return "redirect:/etudiant/dashboard";
+                case "enseignant":
+                    return "redirect:/enseignant/dashboard";
+                case "admin":
+                    return "redirect:/admin/dashboard";
+                default:
+                    return "redirect:/";
+            }
+        } else {
+            // Authentification échouée
+            model.addAttribute("error", "Email ou mot de passe incorrect");
+            model.addAttribute("lastEmail", email);
+            
+            // Retour à la page de login correspondante
+            switch (role) {
+                case "etudiant":
+                    return "loginEtudiant";
+                case "enseignant":
+                    return "loginEnseignant";
+                case "admin":
+                    return "loginAdmin";
+                default:
+                    return "redirect:/";
+            }
         }
-        
-        model.addAttribute("error", "Email ou mot de passe incorrect");
-        model.addAttribute("lastEmail", email); // Conserve l'email pour ré-afficher
-        return loginPage;
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/loginEtudiant";
+    // Méthode pour vérifier l'accès (utilisée par les autres contrôleurs)
+    public static boolean checkAccess(HttpSession session, String requiredRole) {
+        Object user = session.getAttribute("user");
+        if (user == null) return false;
+        
+        // Implémentez la logique de vérification du rôle selon votre modèle
+        // Exemple simplifié :
+        return user.getClass().getSimpleName().equalsIgnoreCase(requiredRole);
     }
 }

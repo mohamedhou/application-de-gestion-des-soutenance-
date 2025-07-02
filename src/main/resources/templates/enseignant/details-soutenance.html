@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails Soutenance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-primary">
+                <i class="fas fa-info-circle me-2"></i>Détails de la soutenance
+            </h2>
+            <a th:href="@{/enseignant/dashboard}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Informations générales</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Étudiant:</strong> <span th:text="${soutenance.etudiant.prenom + ' ' + soutenance.etudiant.nom}"></span></p>
+                        <p><strong>Encadrant:</strong> <span th:text="${soutenance.sujet.encadrant.prenom + ' ' + soutenance.sujet.encadrant.nom}"></span></p>
+                        <p><strong>Sujet:</strong> <span th:text="${soutenance.sujet.titre}"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Date et heure:</strong> <span th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy à HH:mm')}"></span></p>
+                        <p><strong>Salle:</strong> <span th:text="${soutenance.salle.nom}"></span></p>
+                        <p><strong>Durée:</strong> 45 minutes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Membres du jury</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li th:each="jury : ${soutenance.juryEnseignants}" 
+                                class="list-group-item d-flex justify-content-between align-items-center">
+                                <span th:text="${jury.prenom + ' ' + jury.nom}"></span>
+                                <span th:if="${soutenance.notes != null && soutenance.notes.containsKey(jury)}" 
+                                      class="badge bg-primary rounded-pill" 
+                                      th:text="${soutenance.notes.get(jury)}"></span>
+                                <span th:unless="${soutenance.notes != null && soutenance.notes.containsKey(jury)}" 
+                                      class="badge bg-secondary rounded-pill">-</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Évaluation</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6>Note finale:</h6>
+                            <span th:if="${soutenance.noteFinale != null}" 
+                                  class="display-6 fw-bold text-primary" 
+                                  th:text="${soutenance.noteFinale} + '/20'"></span>
+                            <span th:unless="${soutenance.noteFinale != null}" 
+                                  class="text-muted">Non évaluée</span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Rapport de stage:</h6>
+                            <div th:if="${soutenance.rapport != null}">
+                                <a th:href="@{${soutenance.rapport}}" 
+                                   class="btn btn-success btn-sm">
+                                    <i class="fas fa-download me-1"></i> Télécharger
+                                </a>
+                            </div>
+                            <div th:unless="${soutenance.rapport != null}">
+                                <span class="badge bg-warning">Non disponible</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+            <a th:href="@{/enseignant/soumettre-notes/{id}(id=${soutenance.id})}" 
+               class="btn btn-primary me-md-2">
+                <i class="fas fa-edit me-1"></i> Noter
+            </a>
+        </div>
+    </div>
+</body>
+</html>

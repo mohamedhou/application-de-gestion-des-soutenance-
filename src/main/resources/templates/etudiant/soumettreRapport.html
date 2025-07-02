@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Soumettre le rapport</title>
+</head>
+<body>
+    <h1>Soumettre votre rapport de soutenance</h1>
+    <a th:href="@{/etudiant/dashboard}">Retour au tableau de bord</a>
+    
+    <div th:if="${param.error}">
+        <p th:if="${param.error == 'upload_failed'}">Erreur lors du téléversement du fichier</p>
+    </div>
+    
+    <form th:action="@{/etudiant/soumettre-rapport}" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="file">Sélectionnez votre rapport (PDF):</label>
+            <input type="file" name="file" id="file" accept=".pdf" required>
+        </div>
+        <button type="submit">Soumettre</button>
+    </form>
+</body>
+</html>

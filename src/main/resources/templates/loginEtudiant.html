@@ -343,7 +343,7 @@
             </div>
         </div>
 
-        <form action="/loginEtudiant" method="post" id="loginForm">
+        <form th:action="@{/login-etudiant}" method="post" id="loginForm">
             <div class="form-group">
                 <label for="email">📧 Adresse email universitaire:</label>
                 <input type="email" 
@@ -374,22 +374,14 @@
     </div>
 
     <script>
-        // Form submission with loading state
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const button = document.getElementById('loginButton');
-            const email = document.getElementById('email').value.trim();
-            
-            // Basic email validation
-            if (!email || !email.includes('@')) {
-                e.preventDefault();
-                return;
-            }
-            
-            // Add loading state
-            button.classList.add('loading');
-            button.textContent = 'Connexion en cours...';
-            button.disabled = true;
-        });
+		document.getElementById('loginForm').addEventListener('submit', function(e) {
+		     // MA B9INACH KANDIRO VALIDATION HNA
+		     const button = document.getElementById('loginButton');
+		     button.classList.add('loading');
+		     button.textContent = 'Connexion en cours...';
+		     button.disabled = true;
+		     // On ne fait plus de e.preventDefault(), on laisse le formulaire partir.
+		 });
 
         // Email input enhancement
         const emailInput = document.getElementById('email');

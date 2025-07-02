@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Liste des sujets</title>
+</head>
+<body>
+    <h1>Sujets disponibles</h1>
+    <a th:href="@{/etudiant/dashboard}">Retour au tableau de bord</a>
+    
+    <table border="1">
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Encadrant</th>
+        </tr>
+        <tr th:each="sujet : ${sujets}">
+            <td th:text="${sujet.titre}"></td>
+            <td th:text="${sujet.description}"></td>
+            <td th:text="${sujet.encadrant.nom + ' ' + sujet.encadrant.prenom}"></td>
+        </tr>
+    </table>
+</body>
+</html>

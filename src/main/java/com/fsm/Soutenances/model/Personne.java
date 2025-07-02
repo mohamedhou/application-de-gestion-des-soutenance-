@@ -1,34 +1,16 @@
 package com.fsm.Soutenances.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class Personne {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public abstract class Personne {
     private String nom;
     private String prenom;
-    
-    @Column(unique = true, nullable = false)
     private String email;
-    
-    @Column(nullable = false)
-    private String password; // Ajout du champ password
+    private String password;
+    private String cni;
 
     // Getters et setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNom() {
         return nom;
     }
@@ -60,4 +42,14 @@ public class Personne {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getCni() {
+        return cni;
+    }
+
+    public void setCni(String cni) {
+        this.cni = cni;
+    }
+  
+ 
 }

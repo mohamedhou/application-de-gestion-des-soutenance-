@@ -12,7 +12,8 @@ public class Sujet {
     private String description;
     private boolean valide;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "encadrant_id")
     private Enseignant encadrant;
     
     // Getters/setters
