@@ -333,7 +333,7 @@
 	            <p class="university-name">Faculté des Sciences - Meknès</p>
 	        </div>
 	
-	        <form action="/loginEnseignant" method="post" id="loginForm">
+	        <form th:action="@{/login-enseignant}" method="post" id="loginForm">
 	            <div class="form-group">
 	                <label for="email">📧 Adresse email :</label>
 	                <input type="email" 
@@ -364,14 +364,20 @@
 	
 	    <script>
 	        // Form submission with loading state
-	        document.getElementById('loginForm').addEventListener('submit', function() {
-	            const container = document.querySelector('.login-container');
-	            const submitBtn = document.getElementById('submitBtn');
-	            
-	            container.classList.add('loading');
-	            submitBtn.textContent = 'Connexion en cours...';
-	        });
-	
+			// Form submission with loading state
+			document.getElementById('loginForm').addEventListener('submit', function() {
+			    const submitBtn = document.getElementById('submitBtn');
+			    if (submitBtn) {
+			        submitBtn.textContent = 'Connexion en cours...';
+			        submitBtn.disabled = true;
+			        // On peut aussi ajouter une classe pour un effet visuel
+			        const container = document.querySelector('.login-container');
+			        if (container) {
+			            container.classList.add('loading');
+			        }
+			    }
+			});
+			
 	        // Add some interactive effects
 	        document.addEventListener('DOMContentLoaded', function() {
 	            const shapes = document.querySelectorAll('.floating-shape');

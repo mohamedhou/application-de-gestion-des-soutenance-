@@ -9,10 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/enseignant")
@@ -21,8 +18,9 @@ public class EnseignantController {
     @Autowired 
     private SujetRepository sujetRepository;
     
-    @Autowired 
-    private SoutenanceRepository soutenanceRepository;
+    // N7iydo SoutenanceRepository men hna 7it EnseignantService déja kayst3mlo
+    // @Autowired 
+    // private SoutenanceRepository soutenanceRepository; 
     
     @Autowired 
     private EnseignantService enseignantService;
@@ -34,14 +32,16 @@ public class EnseignantController {
         if (user instanceof Enseignant) {
             Enseignant enseignant = (Enseignant) user;
             
-            // Utiliser directement l'objet de session sans rafraîchir
             model.addAttribute("enseignant", enseignant);
             model.addAttribute("sujets", sujetRepository.findByEncadrant(enseignant));
-            model.addAttribute("soutenances", soutenanceRepository.findByEnseignantId(enseignant.getId()));
+            
+            model.addAttribute("soutenancesJure", enseignantService.getSoutenancesJure(enseignant));
+            model.addAttribute("soutenancesEncadrees", enseignantService.getSoutenancesEncadrees(enseignant));
             
             return "enseignant/dashboard";
         } else {
-            return "redirect:/login";
+            // CORRECTION: Redirection vers la page de login spécifique
+            return "redirect:/login-enseignant";
         }
     }
     
@@ -49,7 +49,8 @@ public class EnseignantController {
     public String proposerSujetForm(HttpSession session, Model model) {
         Object user = session.getAttribute("user");
         if (!(user instanceof Enseignant)) {
-            return "redirect:/login";
+            // CORRECTION: Redirection vers la page de login spécifique
+            return "redirect:/login-enseignant";
         }
         
         model.addAttribute("sujet", new Sujet());
@@ -60,15 +61,16 @@ public class EnseignantController {
     public String proposerSujet(@ModelAttribute Sujet sujet, HttpSession session) {
         Object user = session.getAttribute("user");
         if (!(user instanceof Enseignant)) {
-            return "redirect:/login";
+            // CORRECTION: Redirection vers la page de login spécifique
+            return "redirect:/login-enseignant";
         }
         
         Enseignant enseignant = (Enseignant) user;
-        // Rafraîchir les données depuis la base
-        enseignant = enseignantService.findById(enseignant.getId());
+        // Pas besoin de refaire un findById, l'objet dans la session est souvent suffisant
+        // enseignant = enseignantService.findById(enseignant.getId()); 
         
         sujet.setEncadrant(enseignant);
-        sujet.setValide(false);
+        sujet.setValide(false); // Par défaut, un sujet n'est pas validé
         sujetRepository.save(sujet);
         return "redirect:/enseignant/dashboard";
     }

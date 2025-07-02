@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Soutenances - Admin</title>
+    <style>
+        /* CSS men l'exemple dyalk + Iḍafat */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 24px;
+        }
+        .welcome-section h1 { color: #1e3a8a; font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+        .welcome-section .subtitle { color: #64748b; font-size: 14px; }
+        .logout-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white; padding: 10px 20px; border: none;
+            border-radius: 25px; text-decoration: none; font-weight: 600;
+            transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px; padding: 25px;
+            margin-bottom: 30px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 15px;
+            border-bottom: 3px solid #3b82f6; position: relative;
+        }
+        .section-header::after {
+            content: ''; position: absolute; bottom: -3px; left: 0;
+            width: 50px; height: 3px; background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+        .section h2 { color: #1e3a8a; font-size: 22px; font-weight: 600; margin: 0; }
+        .header-actions { display: flex; gap: 10px; }
+        .action-button {
+            color: white; padding: 10px 20px; border: none;
+            border-radius: 25px; text-decoration: none; font-weight: 600;
+            font-size: 14px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .action-button:hover { transform: translateY(-2px); }
+        .add-btn {
+            background: linear-gradient(135deg, #059669, #047857);
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        }
+        .add-btn:hover { box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4); }
+        .search-btn {
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .search-btn:hover { box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
+        table {
+            width: 100%; border-collapse: collapse; margin-top: 15px;
+            border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        table th {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white; padding: 15px 12px; text-align: left;
+            font-weight: 600; font-size: 14px;
+        }
+        table td { padding: 12px; border-bottom: 1px solid #e5e7eb; background: white; }
+        table tr:nth-child(even) td { background: #f8fafc; }
+        table tr:hover td { background: #e0f2fe; }
+        .table-actions { display: flex; gap: 10px; }
+        .table-btn {
+            padding: 6px 14px; border: none; border-radius: 20px;
+            text-decoration: none; font-weight: 600; font-size: 12px;
+            color: white; transition: transform 0.2s ease;
+        }
+        .table-btn:hover { transform: scale(1.05); }
+        .btn-edit { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .btn-delete { background: linear-gradient(135deg, #f87171, #ef4444); }
+        .empty-state { text-align: center; padding: 40px 20px; color: #64748b; }
+        .empty-state-icon { font-size: 48px; margin-bottom: 15px; opacity: 0.5; }
+        .empty-state-text { font-size: 16px; margin-bottom: 10px; }
+        .empty-state-subtext { font-size: 14px; opacity: 0.7; }
+        
+        @media (max-width: 768px) {
+            .header, .section-header { flex-direction: column; gap: 15px; text-align: center; align-items: center; }
+            .section-header { align-items: flex-start; }
+            table { font-size: 12px; }
+            table th, table td { padding: 8px 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">FSM</div>
+                <div class="welcome-section">
+                    <h1>Panneau d'Administration</h1>
+                    <div class="subtitle">Gestion des Soutenances</div>
+                </div>
+            </div>
+            <a href="/logout" class="logout-btn">Déconnexion</a>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Liste des Soutenances</h2>
+                <div class="header-actions">
+                    <a href="/admin/soutenances/planifier" class="action-button add-btn">➕ Planifier</a>
+                    <a href="/admin/soutenances/rechercher" class="action-button search-btn">🔍 Rechercher</a>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(soutenances)}" class="empty-state">
+                <div class="empty-state-icon">📅</div>
+                <div class="empty-state-text">Aucune soutenance planifiée pour le moment</div>
+                <div class="empty-state-subtext">Utilisez le bouton "Planifier" pour ajouter une nouvelle soutenance.</div>
+            </div>
+
+            <table th:if="${not #lists.isEmpty(soutenances)}">
+                <thead>
+                    <tr>
+                        <th>Étudiant</th>
+                        <th>Sujet</th>
+                        <th>Date & Heure</th>
+                        <th>Salle</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="soutenance : ${soutenances}">
+                        <td th:text="${soutenance.etudiant.nom + ' ' + soutenance.etudiant.prenom}">Étudiant Inconnu</td>
+                        <td th:text="${soutenance.sujet.titre}">Sujet non défini</td>
+                        <td th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy') + ' à ' + #temporals.format(soutenance.heure, 'HH:mm')}">Date non définie</td>
+                        <td th:text="${soutenance.salle.nom}">Salle non définie</td>
+                        <td>
+                            <div class="table-actions">
+                                <a th:href="@{/admin/soutenances/modifier/{id}(id=${soutenance.id})}" class="table-btn btn-edit">Modifier</a>
+                                <a th:href="@{/admin/soutenances/supprimer/{id}(id=${soutenance.id})}" class="table-btn btn-delete">Supprimer</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

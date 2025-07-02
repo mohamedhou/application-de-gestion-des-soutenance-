@@ -29,12 +29,10 @@ public class EnseignantService {
         this.enseignantRepository = enseignantRepository;
     }
 
- // Dans EnseignantService.java
     public Enseignant findById(Long id) {
         return enseignantRepository.findById(id).orElse(null);
     }
 
-    // Autres méthodes inchangées...
     public void ajouterSujet(Sujet sujet, Enseignant enseignant) {
         sujet.setEncadrant(enseignant);
         sujetRepository.save(sujet);
@@ -44,12 +42,13 @@ public class EnseignantService {
         return sujetRepository.findByEncadrant(enseignant);
     }
 
+    // CORRECTION DES MÉTHODES
     public List<Soutenance> getSoutenancesJure(Enseignant enseignant) {
         return soutenanceRepository.findByJuryEnseignants(enseignant);
     }
 
     public List<Soutenance> getSoutenancesEncadrees(Enseignant enseignant) {
-        return soutenanceRepository.findBySujetEncadrant(enseignant);
+        return soutenanceRepository.findBySujetEncadrant(enseignant.getId());
     }
 
     public Soutenance getSoutenanceDetails(Long id) {
@@ -61,14 +60,11 @@ public class EnseignantService {
         if (optionalSoutenance.isPresent()) {
             Soutenance soutenance = optionalSoutenance.get();
             
-            // Vérifier que l'enseignant fait partie du jury
             if (soutenance.getJuryEnseignants() != null && 
                 soutenance.getJuryEnseignants().contains(enseignant)) {
                 
-                // Enregistrer la note individuelle
                 soutenance.getNotes().put(enseignant, note);
                 
-                // Calculer la moyenne des notes
                 double moyenne = soutenance.getNotes().values().stream()
                         .mapToDouble(Double::doubleValue)
                         .average()
@@ -77,7 +73,7 @@ public class EnseignantService {
                 soutenance.setNoteFinale(moyenne);
                 soutenanceRepository.save(soutenance);
             } else {
-                throw new IllegalArgumentException("L'enseignant ne fait pas partie du jury de cette soutenance");
+                throw new IllegalArgumentException("L'enseignant ne fait pas partie du jury");
             }
         } else {
             throw new IllegalArgumentException("Soutenance introuvable");
@@ -85,7 +81,7 @@ public class EnseignantService {
     }
     
     public List<Soutenance> getRapportsEtudiants(Enseignant enseignant) {
-        return soutenanceRepository.findBySujetEncadrantAndRapportIsNotNull(enseignant);
+        return soutenanceRepository.findBySujetEncadrantAndRapportIsNotNull(enseignant.getId());
     }
 
     public String getDisponibilites(Enseignant enseignant) {
@@ -96,7 +92,6 @@ public class EnseignantService {
         enseignant.setDisponibilites(disponibilites);
         enseignantRepository.save(enseignant);
     }
-
 
     public void declarerDisponibilites(Enseignant enseignant, String disponibilites) {
         enseignant.setDisponibilites(disponibilites);

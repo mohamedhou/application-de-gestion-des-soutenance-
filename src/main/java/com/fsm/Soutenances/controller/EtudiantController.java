@@ -157,4 +157,5 @@ public class EtudiantController {
     private Soutenance getSoutenanceForEtudiant(Etudiant etudiant) {
         return soutenanceRepository.findByEtudiant(etudiant).orElse(null);
     }
+    
 }

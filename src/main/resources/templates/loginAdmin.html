@@ -339,7 +339,7 @@
             <div class="subtitle">Faculté des Sciences - Meknès</div>
         </div>
 
-        <form action="/loginAdmin" method="post" id="loginForm">
+        <form th:action="@{/login-admin}" method="post" id="loginForm">
             <div class="form-group">
                 <label for="email">📧 Adresse Email</label>
                 <input type="email" 
@@ -365,15 +365,19 @@
     </div>
 
     <script>
-        // Form submission with loading state
-        document.getElementById('loginForm').addEventListener('submit', function() {
-            const container = document.querySelector('.login-container');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            container.classList.add('loading');
-            submitBtn.innerHTML = '⏳ Connexion en cours...';
-            submitBtn.disabled = true;
-        });
+		// Form submission with loading state
+		document.getElementById('loginForm').addEventListener('submit', function() {
+		    const submitBtn = document.getElementById('submitBtn');
+		    if (submitBtn) {
+		        submitBtn.innerHTML = '⏳ Connexion en cours...';
+		        submitBtn.disabled = true;
+		        // On peut aussi ajouter une classe pour un effet visuel
+		        const container = document.querySelector('.login-container');
+		        if (container) {
+		            container.classList.add('loading');
+		        }
+		    }
+		});
 
         // Email validation
         document.getElementById('email').addEventListener('input', function() {
