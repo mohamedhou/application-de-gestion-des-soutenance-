@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,4 +73,37 @@ public class CreneauIndisponibleService {
         }
         creneauRepo.deleteById(creneauId);
     }
+    
+    
+    /**
+     *  Méthode N°1: Tjib lina la liste dyal les enseignants li DISPONIBLES
+     */
+    public List<Enseignant> findAvailableJuryMembers(LocalDateTime debut, LocalDateTime fin) {
+        // 1. Njbdo la liste dyal les IDs dyal les enseignants li 3AMRIN
+        List<Long> indisponibleIds = creneauRepo.findIndisponibleEnseignantIdsForPeriod(debut, fin);
+
+        // 2. Njbdo ga3 les enseignants
+        List<Enseignant> allEnseignants = enseignantRepo.findAll();
+
+        // 3. N7iydo men ga3 les enseignants, hadouk li 3amrin
+        if (!indisponibleIds.isEmpty()) {
+            return allEnseignants.stream()
+                .filter(enseignant -> !indisponibleIds.contains(enseignant.getId()))
+                .collect(Collectors.toList());
+        } else {
+            // Ila kolchi disponible
+            return allEnseignants;
+        }
+    }
+
+    /**
+     * Méthode N°2: Vérifier si un créneau est déjà pris par un enseignant
+     * Ghadi nst3mlouha 9bel man planifiw
+     */
+    public boolean isCreneauIndisponible(Long enseignantId, LocalDateTime debut, LocalDateTime fin) {
+        return !creneauRepo.findByEnseignantIdAndPeriodOverlap(enseignantId, debut, fin).isEmpty();
+    }
+    
+    
+    
 }
