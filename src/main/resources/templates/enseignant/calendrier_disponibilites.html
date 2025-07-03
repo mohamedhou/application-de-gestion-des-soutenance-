@@ -61,42 +61,45 @@
                 editable: false,   // On désactive le drag-and-drop pour l'instant (plus simple)
                 
                 // Déclenché quand l'utilisateur sélectionne un créneau avec la souris
-                select: function(selectionInfo) {
-                    const title = prompt('Description de l\'indisponibilité (ex: Réunion, Cours... Laisser vide pour "Indisponible"):');
+				select: function(selectionInfo) {
+				    const title = prompt('Description de l\'indisponibilité :', 'Indisponible');
 
-                    // On n'ajoute rien si l'utilisateur clique sur "Annuler"
-                    if (title === null) {
-                        calendar.unselect();
-                        return;
-                    }
-                    
-                    const newEvent = {
-                        title: title.trim() === '' ? 'Indisponible' : title.trim(),
-                        start: selectionInfo.startStr, // Format ISO "2024-07-03T10:00:00"
-                        end: selectionInfo.endStr
-                    };
+				    if (title === null) {
+				        calendar.unselect();
+				        return;
+				    }
+				    
+				    const newEvent = {
+				        title: title.trim() === '' ? 'Indisponible' : title.trim(),
+				        // CORRECTION: .toISOString() kat3ti format standard li kayfhemha l'backend
+				        start: selectionInfo.start.toISOString(), 
+				        end: selectionInfo.end.toISOString()
+				    };
 
-                    // On envoie la nouvelle indisponibilité à notre API via POST
-                    fetch(apiBaseUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(newEvent)
-                    })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Erreur serveur');
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Créneau ajouté avec succès:', data);
-                        calendar.refetchEvents(); // Recharge les événements pour afficher le nouveau
-                    })
-                    .catch(error => {
-                        console.error("Erreur lors de l'ajout du créneau:", error);
-                        alert("Impossible d'ajouter le créneau.");
-                    });
+				    // On envoie la nouvelle indisponibilité à notre API
+				    fetch(apiBaseUrl, {
+				        method: 'POST',
+				        headers: { 'Content-Type': 'application/json' },
+				        body: JSON.stringify(newEvent)
+				    })
+				    .then(response => {
+				        if (!response.ok) {
+				            // Hada code zwin bach n'affichew l'erreur s7i7a
+				            return response.text().then(text => { throw new Error(text || 'Erreur serveur inconnue') });
+				        }
+				        return response.json();
+				    })
+				    .then(data => {
+				        console.log('Créneau ajouté avec succès:', data);
+				        calendar.refetchEvents(); // Recharge les événements pour afficher le nouveau
+				    })
+				    .catch(error => {
+				        console.error("Erreur lors de l'ajout:", error);
+				        alert("Impossible d'ajouter le créneau.\n\nDétail: " + error.message);
+				    });
 
-                    calendar.unselect();
-                },
+				    calendar.unselect();
+				},
 
                 // Déclenché quand l'utilisateur clique sur un événement existant
                 eventClick: function(clickInfo) {
