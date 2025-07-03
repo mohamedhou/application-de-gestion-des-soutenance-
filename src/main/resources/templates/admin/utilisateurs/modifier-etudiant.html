@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier Étudiant</title>
+    <!-- St3mel nafs l'style -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; min-height: 100vh; color: #333; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { color: #1e3a8a; font-size: 28px; }
+        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; }
+        .form-section { background: white; border-radius: 12px; padding: 30px 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px; }
+        .form-group input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; }
+        .form-actions { display: flex; justify-content: flex-end; margin-top: 30px; }
+        .submit-btn { padding: 12px 30px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; background: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Modifier les informations de l'étudiant</h1>
+            <a th:href="@{/admin/utilisateurs}" class="back-link">← Retour à la liste</a>
+        </div>
+        <div class="form-section">
+            <form th:action="@{/admin/utilisateurs/modifier-etudiant}" th:object="${etudiant}" method="post">
+                <!-- On cache l'ID pour l'envoyer avec le formulaire -->
+                <input type="hidden" th:field="*{id}">
+                <input type="hidden" th:field="*{password}"> <!-- Important: pour ne pas écraser le mot de passe -->
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nom:</label>
+                        <input type="text" th:field="*{nom}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Prénom:</label>
+                        <input type="text" th:field="*{prenom}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" th:field="*{email}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CNI:</label>
+                        <input type="text" th:field="*{cni}" required>
+                    </div>
+                     <div class="form-group">
+                        <label>Massar:</label>
+                        <input type="text" th:field="*{massar}">
+                    </div>
+                    <div class="form-group">
+                        <label>Filière:</label>
+                        <input type="text" th:field="*{filiere}" required>
+                    </div>
+                     <div class="form-group">
+                        <label>Niveau:</label>
+                        <input type="text" th:field="*{niveau}">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">Enregistrer les modifications</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

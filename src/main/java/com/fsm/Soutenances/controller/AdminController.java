@@ -98,7 +98,7 @@ public class AdminController {
         model.addAttribute("salles", salleRepository.findAll());
         model.addAttribute("salle", new Salle()); 
         return "admin/salles/liste";
-    }
+    }	
 
     @PostMapping("/salles/ajouter")
     public String ajouterSalle(@ModelAttribute Salle salle, RedirectAttributes redirectAttributes) {
