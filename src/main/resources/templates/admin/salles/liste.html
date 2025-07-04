@@ -39,40 +39,45 @@
         <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
         
         <!-- Formulaire d'ajout -->
-        <div class="section">
-            <h2>Ajouter une nouvelle salle</h2>
-            <form th:action="@{/admin/salles/ajouter}" th:object="${salle}" method="post" class="form-inline">
-                <input type="text" th:field="*{nom}" placeholder="Nom de la salle (ex: Salle B12)" required>
-                <input type="text" th:field="*{capacite}" placeholder="Capacité" required>
-                <button type="submit">Ajouter</button>
-            </form>
-        </div>
-        
-        <!-- Liste des salles existantes -->
-        <div class="section">
-            <h2>Salles existantes</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nom de la Salle</th>
-                        <th>Capacité</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="s : ${salles}">
-                        <td th:text="${s.nom}"></td>
-                        <td th:text="${s.capacite}"></td>
-                        <td>
-                            <form th:action="@{/admin/salles/supprimer/{id}(id=${s.id})}" method="post" 
-                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?');">
-                                <button type="submit" class="delete-form">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+		<!-- F admin/salles/liste.html -->
+		<!-- Formulaire d'ajout -->
+		<div class="section">
+		    <h2>Ajouter une nouvelle salle</h2>
+		    <!-- CORRECTION: Utilisation de th:object="${nouvelleSalle}" -->
+		    <form th:action="@{/admin/salles/ajouter}" th:object="${nouvelleSalle}" method="post" class="form-inline">
+		        <input type="text" th:field="*{nom}" placeholder="Nom de la salle (ex: Salle B12)" required>
+		        <!-- On s'assure que le type est 'number' pour la capacité -->
+		        <input type="number" th:field="*{capacite}" placeholder="Capacité" required min="1">
+		        <button type="submit">Ajouter</button>
+		    </form>
+		</div>
+
+		<!-- Liste des salles existantes -->
+		<div class="section">
+		    <h2>Salles existantes</h2>
+		    <table>
+		        <thead>
+		            <tr>
+		                <th>Nom de la Salle</th>
+		                <th>Capacité</th>
+		                <th>Action</th>
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <!-- S'assurer que la boucle est sur la bonne variable 'salles' -->
+		            <tr th:each="s : ${salles}">
+		                <td th:text="${s.nom}"></td>
+		                <td th:text="${s.capacite}"></td>
+		                <td>
+		                    <!-- Le formulaire de suppression est déjà bon -->
+		                    <form th:action="@{/admin/salles/supprimer/{id}(id=${s.id})}" method="post" 
+		                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?');">
+		                        <button type="submit" class="delete-form">Supprimer</button>
+		                    </form>
+		                </td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</div>
 </body>
 </html>

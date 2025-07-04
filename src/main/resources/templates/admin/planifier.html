@@ -1,85 +1,104 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Planifier Soutenance</title>
-    <!-- CSS li kan 3ndek -->
+    <meta charset="UTF-8">
+    <title>Planifier une Soutenance</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f4f8; color: #333; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { color: #1e3a8a; font-size: 28px; font-weight: 700; }
+        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px; }
+        .form-section { background: white; border-radius: 12px; padding: 30px 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; color: #374151; }
+        .form-control { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; }
+        .form-control:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .btn { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 15px; }
+        .btn-secondary { background-color: #4f46e5; color: white; margin-top: 15px;}
+        .btn-secondary:hover { background-color: #4338ca; }
+        .btn-primary { background-color: #16a34a; color: white; }
+        .btn-primary:hover { background-color: #15803d; }
+        .jury-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5e7eb; display: none; }
+        .jury-section h3 { color: #1e3a8a; margin-bottom: 15px; }
+        #jury-list label { display: block; margin-bottom: 8px; padding: 10px; border-radius: 6px; background-color: #f9fafb; }
+        #jury-list input { margin-right: 10px; }
+        .form-actions { display: flex; justify-content: flex-end; margin-top: 30px; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 8px; color: #fff; background-color: #ef4444; }
+    </style>
 </head>
 <body>
-<div class="container">
-    <div class="section">
-        <h2>📅 Planifier une nouvelle soutenance</h2>
-        <form th:action="@{/admin/soutenances/planifier}" th:object="${soutenance}" method="post">
-            
-            <!-- Choix Étudiant et Sujet (mabdelnach) -->
-            <select th:field="*{etudiant}">
-                <option th:each="etud : ${etudiants}" th:value="${etud.id}" th:text="${etud.nom}"></option>
-            </select>
-            <!-- ... -->
-
-            <!-- HNA L'CHANGEMENT L'KBIR: Date, Heure, Durée -->
-            <div class="form-group">
-                <label>Date de la soutenance:</label>
-                <input type="date" id="soutenance_date" required>
-            </div>
-            <div class="form-group">
-                <label>Heure de début:</label>
-                <input type="time" id="soutenance_heure" required>
-            </div>
-             <div class="form-group">
-                <label>Salle:</label>
-                <select id="soutenance_salle" th:field="*{salle}" required>
-                    <option th:each="s : ${salles}" th:value="${s.id}" th:text="${s.nom}"></option>
-                </select>
-            </div>
-
-            <!-- Bouton bach njib l jury l'disponibles -->
-            <button type="button" id="findJuryBtn" class="submit-btn">Chercher Jury Disponible</button>
-
-            <!-- La liste dyal Jury Disponibles (ghadi t3emmer b JavaScript) -->
-            <div id="jury-list" style="margin-top: 20px;">
-                <h3>Jury disponible:</h3>
-                <!-- Les checkboxes dyal l jury ghaytzado hna -->
-            </div>
-
-            <button type="submit" class="submit-btn">Planifier Soutenance</button>
-        </form>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Planifier une Nouvelle Soutenance</h1>
+            <a th:href="@{/admin/soutenances}" class="back-link"><span>←</span> Retour</a>
+        </div>
+        <div class="form-section">
+            <div th:if="${errorMessage}" class="alert" th:text="${errorMessage}"></div>
+            <form th:action="@{/admin/soutenances/planifier}" th:object="${soutenance}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="etudiant">Étudiant :</label>
+                        <select id="etudiant" th:field="*{etudiant.id}" class="form-control" required>
+                            <option value="">Sélectionner un étudiant...</option>
+                            <option th:each="etud : ${etudiants}" th:value="${etud.id}" th:text="${etud.prenom + ' ' + etud.nom}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="salle">Salle :</label>
+                        <select id="salle" th:field="*{salle.id}" class="form-control" required>
+                            <option value="">Sélectionner une salle...</option>
+                            <option th:each="s : ${salles}" th:value="${s.id}" th:text="${s.nom}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateSoutenance">Date :</label>
+                        <input type="date" id="dateSoutenance" name="dateSoutenance" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="heureSoutenance">Heure de début :</label>
+                        <input type="time" id="heureSoutenance" name="heureSoutenance" class="form-control" step="1800" required>
+                    </div>
+                </div>
+                <button type="button" id="findJuryBtn" class="btn btn-secondary">🔍 Chercher Jury Disponible</button>
+                <div id="jury-section" class="jury-section">
+                    <h3>Membres du Jury Disponibles</h3>
+                    <div id="jury-list"></div>
+                </div>
+                <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">✓ Planifier la Soutenance</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<script>
-    document.getElementById('findJuryBtn').addEventListener('click', function() {
-        const date = document.getElementById('soutenance_date').value;
-        const heure = document.getElementById('soutenance_heure').value;
-        
-        if (!date || !heure) {
-            alert('Veuillez sélectionner une date et une heure.');
-            return;
-        }
-
-        // On crée la date et heure de début en format ISO
-        const debutStr = date + 'T' + heure;
-
-        // On envoie un appel API pour récupérer les enseignants disponibles
-        fetch('/api/admin/enseignants-disponibles?debut=' + debutStr)
-            .then(response => response.json())
-            .then(data => {
-                const juryListDiv = document.getElementById('jury-list');
-                juryListDiv.innerHTML = '<h3>Jury disponible:</h3>'; // On vide la liste
-                
-                if (data.length === 0) {
-                    juryListDiv.innerHTML += '<p>Aucun enseignant disponible pour ce créneau.</p>';
-                } else {
-                    data.forEach(enseignant => {
-                        juryListDiv.innerHTML += `
-                            <label>
-                                <input type="checkbox" name="juryEnseignants" value="${enseignant.id}">
-                                ${enseignant.nom} ${enseignant.prenom}
-                            </label><br>
-                        `;
-                    });
-                }
-            });
-    });
-</script>
+    <!-- JavaScript a été externalisé, mais on le garde ici pour la simplicité -->
+    <script th:inline="javascript">
+        document.getElementById('findJuryBtn').addEventListener('click', function() {
+            const date = document.getElementById('dateSoutenance').value;
+            const heure = document.getElementById('heureSoutenance').value;
+            if (!date || !heure) { alert('Veuillez sélectionner une date et une heure.'); return; }
+            const debutDateTime = date + 'T' + heure + ':00';
+            fetch(`/api/admin/enseignants-disponibles?debut=${debutDateTime}`)
+                .then(response => { if (!response.ok) { throw new Error('Erreur réseau'); } return response.json(); })
+                .then(enseignants => {
+                    const jurySection = document.getElementById('jury-section');
+                    const juryListDiv = document.getElementById('jury-list');
+                    juryListDiv.innerHTML = ''; 
+                    if (enseignants.length === 0) {
+                        juryListDiv.innerHTML = '<p style="color: #ef4444;">Aucun enseignant disponible.</p>';
+                    } else {
+                        enseignants.forEach(enseignant => {
+                            const label = document.createElement('label');
+                            label.innerHTML = `<input type="checkbox" name="juryEnseignants" value="${enseignant.id}"> ${enseignant.prenom} ${enseignant.nom}`;
+                            juryListDiv.appendChild(label);
+                        });
+                    }
+                    jurySection.style.display = 'block';
+                }).catch(error => { console.error('Erreur:', error); alert('Impossible de récupérer la liste.'); });
+        });
+    </script>
 </body>
 </html>

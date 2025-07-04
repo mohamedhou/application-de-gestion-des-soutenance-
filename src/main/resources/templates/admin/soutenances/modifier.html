@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier une Soutenance</title>
+    <!-- Nafts l'CSS dyal l'admin panel -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; min-height: 100vh; color: #333; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { color: #1e3a8a; font-size: 28px; }
+        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; }
+        .form-section { background: white; border-radius: 12px; padding: 30px 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; color: #374151; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #d1d5db; }
+        .jury-list { margin-top: 10px; }
+        .form-actions { display: flex; justify-content: flex-end; margin-top: 30px; }
+        .submit-btn { padding: 12px 30px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; background: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Modifier la Soutenance</h1>
+        <a th:href="@{/admin/soutenances}" class="back-link">← Retour à la liste</a>
+    </div>
+
+    <div class="form-section">
+        <!-- L'action dyal l'form katmchi l nafs l'URL dyal POST li déja sayebna -->
+        <form th:action="@{/admin/soutenances/modifier/{id}(id=${soutenance.id})}" th:object="${soutenance}" method="post">
+            <div class="form-grid">
+                
+                <!-- Étudiant (non modifiable) -->
+                <div class="form-group">
+                    <label>Étudiant:</label>
+                    <input type="text" th:value="${soutenance.etudiant.prenom + ' ' + soutenance.etudiant.nom}" readonly style="background:#e9ecef;">
+                    <input type="hidden" th:field="*{etudiant}">
+                </div>
+                
+                <!-- Sujet (non modifiable) -->
+                <div class="form-group">
+                    <label>Sujet:</label>
+                    <input type="text" th:value="${soutenance.sujet.titre}" readonly style="background:#e9ecef;">
+                     <input type="hidden" th:field="*{sujet}">
+                </div>
+                
+                <!-- Date et Heure -->
+                <div class="form-group">
+                    <label for="dateSoutenance">Date:</label>
+                    <input type="date" id="dateSoutenance" name="dateSoutenance"
+                           th:value="${#temporals.format(soutenance.date, 'yyyy-MM-dd')}" required>
+                </div>
+                 <div class="form-group">
+                    <label for="heureSoutenance">Heure:</label>
+                    <input type="time" id="heureSoutenance" name="heureSoutenance"
+                           th:value="${#temporals.format(soutenance.date, 'HH:mm')}" required>
+                </div>
+
+                <!-- Salle -->
+                <div class="form-group">
+                    <label for="salle">Salle:</label>
+                    <select id="salle" th:field="*{salle}" required>
+                         <option th:each="s : ${salles}" th:value="${s.id}" th:text="${s.nom}"
+                                 th:selected="${s.id == soutenance.salle.id}"></option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Jury (multi-select) -->
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Membres du Jury:</label>
+                <div class="jury-list">
+                    <!-- On utilise th:checked pour cocher les membres déjà présents -->
+                    <div th:each="enseignant : ${enseignants}">
+                        <input type="checkbox" name="juryEnseignants" th:value="${enseignant.id}"
+                               th:id="'jury' + ${enseignant.id}"
+                               th:checked="${#lists.contains(soutenance.juryEnseignants.![id], enseignant.id)}">
+                        <label th:for="'jury' + ${enseignant.id}" th:text="${enseignant.prenom + ' ' + enseignant.nom}"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">Enregistrer les Modifications</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

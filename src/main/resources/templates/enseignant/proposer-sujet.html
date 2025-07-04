@@ -3,387 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposer un sujet</title>
+    <title>Proposer un Nouveau Sujet</title>
+    <!-- On va unifier le style -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7fa; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;}
+        .container { max-width: 800px; width: 100%; margin: 20px auto; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
-            min-height: 100vh;
-            color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        /* Header Style */
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #1e3a8a; font-size: 28px; font-weight: 600; margin-bottom: 5px;}
+        .header .subtitle { color: #64748b; font-size: 15px; }
+        
+        /* Form Container Style */
+        .form-container { background: white; border-radius: 12px; padding: 30px 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
 
-        .container {
-            max-width: 600px;
-            width: 100%;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 20px;
-        }
-
-        .header h1 {
-            color: #1e3a8a;
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .header .subtitle {
-            color: #64748b;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .form-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 35px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #374151;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
+        /* Form Group & Inputs */
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #4b5563; }
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 16px;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
             font-family: inherit;
-            transition: all 0.3s ease;
-            background: white;
-            resize: vertical;
+            background-color: #f9fafb;
+            transition: all 0.2s;
         }
-
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-            transform: translateY(-1px);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            background-color: white;
         }
+        .form-group textarea { resize: vertical; min-height: 140px; }
 
-        .form-group textarea {
-            min-height: 120px;
-            max-height: 300px;
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: #9ca3af;
-        }
-
-        .submit-section {
-            display: flex;
-            gap: 15px;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #059669, #047857);
-            color: white;
-            padding: 15px 35px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .back-btn {
-            background: rgba(107, 114, 128, 0.1);
-            color: #6b7280;
-            padding: 12px 25px;
-            border: 2px solid #e5e7eb;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-btn:hover {
-            background: rgba(107, 114, 128, 0.2);
-            border-color: #9ca3af;
-            transform: translateY(-1px);
-        }
-
-        .form-tips {
-            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-            border: 1px solid #93c5fd;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .form-tips h3 {
-            color: #1e40af;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-tips ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .form-tips li {
-            color: #1e40af;
-            font-size: 14px;
-            margin-bottom: 5px;
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .form-tips li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #059669;
-            font-weight: bold;
-        }
-
-        .char-counter {
-            font-size: 12px;
-            color: #6b7280;
-            text-align: right;
-            margin-top: 5px;
-        }
-
-        .char-counter.warning {
-            color: #f59e0b;
-        }
-
-        .char-counter.error {
-            color: #ef4444;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            .form-container {
-                padding: 25px 20px;
-            }
-
-            .submit-section {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .submit-btn,
-            .back-btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .header h1 {
-                font-size: 24px;
-            }
-        }
-
-        /* Animation for form elements */
-        .form-group {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideUp 0.6s ease forwards;
-        }
-
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        /* Character Counter */
+        .char-counter { font-size: 12px; color: #6b7280; text-align: right; margin-top: 5px; }
+        .char-counter.error { color: #ef4444; font-weight: 500;}
+        
+        /* Form Actions & Buttons */
+        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .action-button { padding: 12px 30px; border-radius: 8px; border: none; font-weight: 500; font-size: 15px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+        .btn-back { background-color: #e5e7eb; color: #4b5563; }
+        .btn-back:hover { background-color: #d1d5db; }
+        .btn-submit { background-color: #16a34a; color: white; }
+        .btn-submit:hover { background-color: #15803d; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo-section">
-                <div class="logo">FSM</div>
-            </div>
-            <h1>📝 Proposer un nouveau sujet</h1>
-            <div class="subtitle">Faculté des Sciences - Meknès</div>
+            <h1>📝 Proposer un Nouveau Sujet</h1>
+            <p class="subtitle">Veuillez remplir les informations ci-dessous.</p>
         </div>
 
         <div class="form-container">
-            <div class="form-tips">
-                <h3>💡 Conseils pour une bonne proposition</h3>
-                <ul>
-                    <li>Choisissez un titre clair et précis</li>
-                    <li>Décrivez les objectifs et la méthodologie</li>
-                    <li>Mentionnez les compétences requises</li>
-                    <li>Indiquez les outils/technologies utilisés</li>
-                </ul>
-            </div>
-
             <form th:action="@{/enseignant/proposer-sujet}" th:object="${sujet}" method="post" id="subjectForm">
+                
                 <div class="form-group">
-                    <label for="titre">🎯 Titre du sujet:</label>
+                    <label for="titre">Titre du Sujet</label>
                     <input type="text" 
                            th:field="*{titre}" 
                            id="titre"
-                           placeholder="Ex: Développement d'une application web de gestion..."
+                           placeholder="Ex: Développement d'une application de gestion..."
                            required
                            maxlength="150">
-                    <div class="char-counter" id="titleCounter">0/150 caractères</div>
+                    <div class="char-counter" id="titleCounter">0/150</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="description">📋 Description détaillée:</label>
+                    <label for="description">Description Détaillée du Sujet</label>
                     <textarea th:field="*{description}" 
                               id="description"
-                              placeholder="Décrivez votre sujet en détail: contexte, objectifs, méthodologie, technologies utilisées, livrables attendus..."
+                              placeholder="Décrivez le contexte, les objectifs, la méthodologie, et les technologies envisagées."
                               required
                               maxlength="1000"></textarea>
-                    <div class="char-counter" id="descCounter">0/1000 caractères</div>
+                    <div class="char-counter" id="descCounter">0/1000</div>
                 </div>
 
-                <div class="submit-section">
-                    <a href="/enseignant/dashboard" class="back-btn">
-                        ← Retour au tableau de bord
+                <div class="form-actions">
+                    <a th:href="@{/enseignant/dashboard}" class="action-button btn-back">
+                        ← Annuler
                     </a>
-                    <button type="submit" class="submit-btn">
-                        🚀 Soumettre la proposition
+                    <button type="submit" class="action-button btn-submit">
+                        🚀 Soumettre la Proposition
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Le JavaScript reste fonctionnel, on garde la même logique -->
     <script>
-        // Character counters
-        function updateCharCounter(inputId, counterId, maxLength) {
-            const input = document.getElementById(inputId);
-            const counter = document.getElementById(counterId);
+        function setupCharCounter(inputId, counterId, maxLength) {
+            const inputEl = document.getElementById(inputId);
+            const counterEl = document.getElementById(counterId);
             
-            function updateCounter() {
-                const currentLength = input.value.length;
-                counter.textContent = `${currentLength}/${maxLength} caractères`;
-                
-                // Update counter color based on usage
-                counter.classList.remove('warning', 'error');
-                if (currentLength > maxLength * 0.8) {
-                    counter.classList.add('warning');
-                }
-                if (currentLength > maxLength * 0.95) {
-                    counter.classList.add('error');
-                }
+            function update() {
+                const len = inputEl.value.length;
+                counterEl.textContent = `${len}/${maxLength}`;
+                counterEl.classList.toggle('error', len > maxLength);
             }
             
-            input.addEventListener('input', updateCounter);
-            updateCounter(); // Initial call
+            inputEl.addEventListener('input', update);
+            update();
         }
 
-        // Initialize character counters
-        updateCharCounter('titre', 'titleCounter', 150);
-        updateCharCounter('description', 'descCounter', 1000);
+        setupCharCounter('titre', 'titleCounter', 150);
+        setupCharCounter('description', 'descCounter', 1000);
 
-        // Form validation
         document.getElementById('subjectForm').addEventListener('submit', function(e) {
-            const titre = document.getElementById('titre').value.trim();
-            const description = document.getElementById('description').value.trim();
-            
-            if (titre.length < 10) {
-                e.preventDefault();
-                alert('Le titre doit contenir au moins 10 caractères.');
-                return;
-            }
-            
-            if (description.length < 50) {
-                e.preventDefault();
-                alert('La description doit contenir au moins 50 caractères.');
-                return;
-            }
-
-            // Add loading state to submit button
-            const submitBtn = document.querySelector('.submit-btn');
-            submitBtn.innerHTML = '⏳ Soumission en cours...';
+            const submitBtn = this.querySelector('.btn-submit');
+            submitBtn.textContent = 'Soumission...';
             submitBtn.disabled = true;
-        });
-
-        // Auto-resize textarea
-        const textarea = document.getElementById('description');
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
         });
     </script>
 </body>

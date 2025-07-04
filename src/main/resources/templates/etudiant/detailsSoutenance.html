@@ -3,395 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails de la soutenance</title>
+    <title>Détails de ma Soutenance</title>
+    <!-- On va unifier le style -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* Base & Body */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7fa; min-height: 100vh; color: #333; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+        /* Header Style */
+        .header { background: white; border-radius: 12px; padding: 20px 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .header-title h1 { color: #1e3a8a; font-size: 24px; font-weight: 600; }
+        .back-link { background-color: #eef2ff; color: #4338ca; padding: 10px 20px; text-decoration: none; font-weight: 500; font-size: 14px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .back-link:hover { background-color: #e0e7ff; }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-        }
-
-        .title-section h1 {
-            color: #1e3a8a;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .title-section .subtitle {
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        .back-btn {
-            background: linear-gradient(135deg, #6b7280, #4b5563);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
-        }
-
-        .section {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .section h2 {
-            color: #1e3a8a;
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #3b82f6;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section h2::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .info-card {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            border-radius: 12px;
-            padding: 20px;
-            border-left: 4px solid #3b82f6;
-            transition: all 0.3s ease;
-        }
-
-        .info-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .info-label {
-            color: #64748b;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .info-value {
-            color: #1e3a8a;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .subject-card {
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
-            border-radius: 12px;
-            padding: 25px;
-            border: 2px solid #3b82f6;
-            margin-top: 10px;
-        }
-
-        .subject-title {
-            color: #1e3a8a;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .subject-description {
-            color: #374151;
-            line-height: 1.6;
-            font-size: 16px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 3px solid #3b82f6;
-        }
-
-        .jury-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .jury-member {
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 3px solid #3b82f6;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .jury-member:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .jury-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #3b82f6, #1e40af);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .jury-name {
-            color: #1e3a8a;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        .countdown-timer {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .countdown-number {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #64748b;
-        }
-
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .empty-state-text {
-            font-size: 18px;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .empty-state-subtext {
-            font-size: 14px;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .jury-list {
-                grid-template-columns: 1fr;
-            }
-
-            .title-section h1 {
-                font-size: 24px;
-            }
-        }
+        /* Section & Card Styles */
+        .section { background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .section-header { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 10px;}
+        .section-header h2 { color: #1e3a8a; font-size: 20px; font-weight: 600; }
+        .section-header .icon { font-size: 24px; color: #3b82f6; }
+        
+        /* Soutenance Info Grid */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .info-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; text-align: center;}
+        .info-label { font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: 500; margin-bottom: 5px; }
+        .info-value { font-size: 18px; color: #1e3a8a; font-weight: 600; }
+        
+        /* Sujet Card */
+        .sujet-card h3 { font-size: 18px; color: #1e40af; margin-bottom: 10px; }
+        .sujet-card p { line-height: 1.6; color: #4b5563; }
+        
+        /* Jury List */
+        .jury-list { list-style: none; padding: 0; }
+        .jury-member { display: flex; align-items: center; gap: 15px; padding: 12px 0; border-bottom: 1px solid #e5e7eb; }
+        .jury-member:last-child { border-bottom: none; }
+        .jury-avatar { width: 40px; height: 40px; background-color: #eef2ff; color: #4338ca; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; }
+        .jury-info .name { font-weight: 600; color: #1e3a8a; }
+        .jury-info .specialite { font-size: 14px; color: #64748b; }
+        
+        /* Empty State */
+        .empty-state { text-align: center; padding: 50px; background: #f9fafb; border-radius: 8px; }
+        .empty-state p { font-size: 16px; color: #6b7280; }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <div class="logo-section">
-                <div class="logo">FSM</div>
-                <div class="title-section">
-                    <h1>Détails de votre soutenance</h1>
-                    <div class="subtitle">Faculté des Sciences - Meknès</div>
-                </div>
+            <div class="header-title">
+                <h1>Détails de votre Soutenance</h1>
             </div>
-            <a th:href="@{/etudiant/dashboard}" class="back-btn">
-                ← Retour au tableau de bord
+            <a th:href="@{/etudiant/dashboard}" class="back-link">
+                <span>←</span> Retour au tableau de bord
             </a>
         </div>
 
-        <div th:if="${soutenance}">
-            <div class="countdown-timer">
-                ⏰ Votre soutenance est programmée
-                <div class="countdown-number" th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy à HH:mm')}"></div>
-            </div>
-
+        <!-- Section principale -->
+        <div th:if="${soutenance != null}">
+            <!-- Infos Générales -->
             <div class="section">
-                <h2>📅 Informations générales</h2>
+                <div class="section-header"><span class="icon">📅</span><h2>Informations Générales</h2></div>
                 <div class="info-grid">
-                    <div class="info-card">
-                        <div class="info-label">
-                            📅 Date de soutenance
-                        </div>
-                        <div class="info-value" th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">
-                            🕐 Heure
-                        </div>
-                        <div class="info-value" th:text="${#temporals.format(soutenance.date, 'HH:mm')}"></div>
-                    </div>
-                    <div class="info-card">
-                        <div class="info-label">
-                            🏢 Salle
-                        </div>
-                        <div class="info-value" th:text="${soutenance.salle.nom}"></div>
-                    </div>
-                </div>
-                <div class="status-badge">
-                    ✅ Soutenance confirmée
+                    <div class="info-card"><div class="info-label">Date</div><div class="info-value" th:text="${#temporals.format(soutenance.date, 'dd MMMM yyyy')}"></div></div>
+                    <div class="info-card"><div class="info-label">Heure</div><div class="info-value" th:text="${#temporals.format(soutenance.date, 'HH:mm')}"></div></div>
+                    <div class="info-card"><div class="info-label">Salle</div><div class="info-value" th:text="${soutenance.salle?.nom}"></div></div>
                 </div>
             </div>
 
+            <!-- Infos Sujet et Encadrant -->
             <div class="section">
-                <h2>📝 Sujet de recherche</h2>
-                <div class="subject-card">
-                    <div class="subject-title">
-                        🎯 <span th:text="${soutenance.sujet.titre}"></span>
+                <div class="section-header"><span class="icon">📖</span><h2>Sujet & Encadrant</h2></div>
+                <div class="sujet-card">
+                    <h3>Titre : <span style="font-weight:normal;" th:text="${soutenance.sujet?.titre}"></span></h3>
+                    <p th:text="${soutenance.sujet?.description}"></p>
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #d1d5db;">
+                        <span style="font-weight: 600;">Encadré par:</span> 
+                        <span th:text="${soutenance.sujet?.encadrant?.prenom + ' ' + soutenance.sujet?.encadrant?.nom}"></span>
                     </div>
-                    <div class="subject-description" th:text="${soutenance.sujet.description}"></div>
                 </div>
             </div>
 
+            <!-- Jury -->
             <div class="section">
-                <h2>👨‍⚖️ Composition du jury</h2>
-                <div class="jury-list">
-                    <div th:each="membre : ${soutenance.juryEnseignants}" class="jury-member">
-                        <div class="jury-avatar" th:text="${#strings.substring(membre.nom, 0, 1) + #strings.substring(membre.prenom, 0, 1)}"></div>
-                        <div class="jury-name" th:text="${membre.nom + ' ' + membre.prenom}"></div>
-                    </div>
+                <div class="section-header"><span class="icon">👨‍⚖️</span><h2>Membres du Jury</h2></div>
+                <div th:if="${not #lists.isEmpty(soutenance.juryEnseignants)}">
+                     <ul class="jury-list">
+                        <li th:each="membre : ${soutenance.juryEnseignants}" class="jury-member">
+                            <div class="jury-avatar" th:text="${#strings.substring(membre.prenom, 0, 1) + #strings.substring(membre.nom, 0, 1)}"></div>
+                            <div class="jury-info">
+                                <div class="name" th:text="${membre.prenom + ' ' + membre.nom}"></div>
+                                <div class="specialite" th:text="${membre.specialite}"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div th:if="${#lists.isEmpty(soutenance.juryEnseignants)}" class="empty-state">
+                    <p>Le jury n'a pas encore été affecté par l'administration.</p>
                 </div>
             </div>
         </div>
-
-        <div th:unless="${soutenance}" class="section">
-            <div class="empty-state">
-                <div class="empty-state-icon">📅</div>
-                <div class="empty-state-text">Aucune soutenance programmée</div>
-                <div class="empty-state-subtext">Votre soutenance sera programmée par l'administration une fois votre sujet validé</div>
+        
+        <!-- Cas où il n'y a pas de soutenance -->
+        <div th:if="${soutenance == null}" class="section">
+             <div class="empty-state">
+                <p>Aucune information de soutenance n'a été trouvée.</p>
             </div>
         </div>
+
     </div>
-
-    <script>
-        // Add some interactivity for better UX
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add animation delays for cards
-            const cards = document.querySelectorAll('.info-card, .jury-member');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-            });
-
-            // Add current time display
-            function updateTime() {
-                const now = new Date();
-                const timeString = now.toLocaleTimeString('fr-FR');
-                document.title = `Soutenance - ${timeString}`;
-            }
-            
-            setInterval(updateTime, 1000);
-        });
-    </script>
 </body>
 </html>
