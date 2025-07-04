@@ -73,9 +73,10 @@
                     <td th:text="${enseignant.prenom + ' ' + enseignant.nom}"></td>
                     <td th:text="${enseignant.email}"></td>
                     <td th:text="${enseignant.specialite}"></td>
-                    <td class="table-actions">
-                        <a href="#">Modifier</a> <!-- Lien à ajouter plus tard -->
-                    </td>
+					<!-- F l'tableau des enseignants -->
+					<td class="table-actions">
+					    <a th:href="@{/admin/utilisateurs/modifier-enseignant/{id}(id=${enseignant.id})}">Modifier</a>
+					</td>
                 </tr>
             </tbody>
         </table>

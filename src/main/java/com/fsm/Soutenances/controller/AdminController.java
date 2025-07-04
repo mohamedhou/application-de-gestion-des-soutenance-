@@ -114,6 +114,60 @@ public class AdminController {
         model.addAttribute("enseignants", enseignantRepository.findAll());
         return "admin/utilisateurs/liste";
     }
+
+    // --- Modification Étudiant ---
+    @GetMapping("/utilisateurs/modifier-etudiant/{id}")
+    public String showFormModifierEtudiant(@PathVariable Long id, Model model) {
+        Etudiant etudiant = etudiantRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Étudiant non trouvé: " + id));
+        model.addAttribute("etudiant", etudiant);
+        return "admin/utilisateurs/modifier-etudiant"; // La page HTML que tu as déjà
+    }
+
+    @PostMapping("/utilisateurs/modifier-etudiant")
+    public String modifierEtudiant(@ModelAttribute Etudiant etudiant, RedirectAttributes redirectAttributes) {
+        // Logique sécurisée pour ne pas écraser le mot de passe
+        Etudiant existingEtudiant = etudiantRepository.findById(etudiant.getId()).orElse(null);
+        if (existingEtudiant != null) {
+            existingEtudiant.setNom(etudiant.getNom());
+            existingEtudiant.setPrenom(etudiant.getPrenom());
+            existingEtudiant.setEmail(etudiant.getEmail());
+            existingEtudiant.setCni(etudiant.getCni());
+            existingEtudiant.setMassar(etudiant.getMassar());
+            existingEtudiant.setFiliere(etudiant.getFiliere());
+            existingEtudiant.setNiveau(etudiant.getNiveau());
+            etudiantRepository.save(existingEtudiant);
+            redirectAttributes.addFlashAttribute("successMessage", "Étudiant modifié avec succès.");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Erreur lors de la modification.");
+        }
+        return "redirect:/admin/utilisateurs";
+    }
     
-    // On peut ajouter la logique de modification/suppression ici
+    // --- Modification Enseignant ---
+    @GetMapping("/utilisateurs/modifier-enseignant/{id}")
+    public String showFormModifierEnseignant(@PathVariable Long id, Model model) {
+        Enseignant enseignant = enseignantRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Enseignant non trouvé: " + id));
+        model.addAttribute("enseignant", enseignant);
+        return "admin/utilisateurs/modifier-enseignant"; // Page HTML à créer
+    }
+
+    @PostMapping("/utilisateurs/modifier-enseignant")
+    public String modifierEnseignant(@ModelAttribute Enseignant enseignant, RedirectAttributes redirectAttributes) {
+        // Logique sécurisée pour ne pas écraser le mot de passe
+        Enseignant existingEnseignant = enseignantRepository.findById(enseignant.getId()).orElse(null);
+        if(existingEnseignant != null) {
+            existingEnseignant.setNom(enseignant.getNom());
+            existingEnseignant.setPrenom(enseignant.getPrenom());
+            existingEnseignant.setEmail(enseignant.getEmail());
+            existingEnseignant.setCni(enseignant.getCni());
+            existingEnseignant.setSpecialite(enseignant.getSpecialite());
+            enseignantRepository.save(existingEnseignant);
+            redirectAttributes.addFlashAttribute("successMessage", "Enseignant modifié avec succès.");
+        } else {
+             redirectAttributes.addFlashAttribute("errorMessage", "Erreur lors de la modification.");
+        }
+        return "redirect:/admin/utilisateurs";
+    }
 }
