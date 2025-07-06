@@ -46,7 +46,7 @@
                 <tr th:each="etudiant : ${etudiants}">
                     <td th:text="${etudiant.prenom + ' ' + etudiant.nom}"></td>
                     <td th:text="${etudiant.email}"></td>
-                    <td th:text="${etudiant.filiere}"></td>
+                    <td th:text="${etudiant.filiere?.nom}"></td>
                     <td class="table-actions">
                         <a th:href="@{/admin/utilisateurs/modifier-etudiant/{id}(id=${etudiant.id})}">Modifier</a>
                         <!-- Le bouton de suppression peut être ajouté ici -->

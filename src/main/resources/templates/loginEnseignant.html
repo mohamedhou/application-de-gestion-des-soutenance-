@@ -1,406 +1,150 @@
-	<!DOCTYPE html>
-	<html xmlns:th="http://www.thymeleaf.org">
-	<head>
-	    <meta charset="UTF-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <title>Connexion Enseignant - FSM</title>
-	    <style>
-	        * {
-	            margin: 0;
-	            padding: 0;
-	            box-sizing: border-box;
-	        }
-	
-	        body {
-	            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 25%, #81d4fa 50%, #4fc3f7 75%, #29b6f6 100%);
-	            min-height: 100vh;
-	            display: flex;
-	            align-items: center;
-	            justify-content: center;
-	            position: relative;
-	            overflow: hidden;
-	        }
-	
-	        /* Logo FSM en arrière-plan */
-	        .background-logo {
-	            position: absolute;
-	            top: 50%;
-	            left: 50%;
-	            transform: translate(-50%, -50%);
-	            width: 400px;
-	            height: 400px;
-	            opacity: 0.08;
-	            z-index: 1;
-	            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgdmlld0JveD0iMCAwIDQwMCA0MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMUU0ODJBIIZ0aWxsPSIjMUU0ODJBIEZ0aWxsPSIjMUU0ODJBIEZ0aWxsPSIjMUU0ODJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIEZ0aWxsPSIjMUU0OUBBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OSJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIEZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIEZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OEJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIIZ0aWxsPSIjMUU0OUJBIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQwIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzFFNDA5NCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RjwvdGV4dD4KPHR5eHQgeD0iMjAwIiB5PSIyNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNDAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMUU0MDk0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjM1MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0MCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMxRTQwOTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk08L3RleHQ+CjwvZz4KPC9zdmc+') no-repeat center;
-	            background-size: contain;
-	        }
-	
-	        /* Floating elements for decoration */
-	        .floating-shape {
-	            position: absolute;
-	            opacity: 0.1;
-	            animation: float 6s ease-in-out infinite;
-	        }
-	
-	        .floating-shape:nth-child(1) {
-	            top: 10%;
-	            left: 10%;
-	            width: 60px;
-	            height: 60px;
-	            background: #1e40af;
-	            border-radius: 50%;
-	            animation-delay: 0s;
-	        }
-	
-	        .floating-shape:nth-child(2) {
-	            top: 20%;
-	            right: 15%;
-	            width: 40px;
-	            height: 40px;
-	            background: #2563eb;
-	            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-	            animation-delay: 2s;
-	        }
-	
-	        .floating-shape:nth-child(3) {
-	            bottom: 15%;
-	            left: 15%;
-	            width: 50px;
-	            height: 50px;
-	            background: #3b82f6;
-	            border-radius: 20% 80% 80% 20% / 20% 20% 80% 80%;
-	            animation-delay: 4s;
-	        }
-	
-	        .floating-shape:nth-child(4) {
-	            bottom: 25%;
-	            right: 20%;
-	            width: 35px;
-	            height: 35px;
-	            background: #60a5fa;
-	            border-radius: 50%;
-	            animation-delay: 1s;
-	        }
-	
-	        @keyframes float {
-	            0%, 100% { transform: translateY(0px) rotate(0deg); }
-	            50% { transform: translateY(-20px) rotate(180deg); }
-	        }
-	
-	        .login-container {
-	            background: rgba(255, 255, 255, 0.95);
-	            backdrop-filter: blur(15px);
-	            border-radius: 20px;
-	            padding: 40px;
-	            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-	            width: 100%;
-	            max-width: 420px;
-	            z-index: 10;
-	            position: relative;
-	            border: 1px solid rgba(255, 255, 255, 0.2);
-	        }
-	
-	        .login-header {
-	            text-align: center;
-	            margin-bottom: 35px;
-	        }
-	
-	        .logo-container {
-	            margin-bottom: 20px;
-	        }
-	
-	        .main-logo {
-	            width: 80px;
-	            height: 80px;
-	            background: linear-gradient(135deg, #1e40af, #3b82f6);
-	            border-radius: 20px;
-	            display: flex;
-	            align-items: center;
-	            justify-content: center;
-	            margin: 0 auto 15px;
-	            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3);
-	            position: relative;
-	        }
-	
-	        .main-logo::before {
-	            content: '';
-	            position: absolute;
-	            top: -2px;
-	            left: -2px;
-	            right: -2px;
-	            bottom: -2px;
-	            background: linear-gradient(135deg, #60a5fa, #3b82f6, #1e40af);
-	            border-radius: 22px;
-	            z-index: -1;
-	        }
-	
-	        .main-logo .logo-text {
-	            color: white;
-	            font-size: 32px;
-	            font-weight: 900;
-	            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-	        }
-	
-	        .login-container h2 {
-	            color: #1e40af;
-	            font-size: 28px;
-	            font-weight: 700;
-	            margin-bottom: 8px;
-	        }
-	
-	        .login-subtitle {
-	            color: #64748b;
-	            font-size: 16px;
-	            margin-bottom: 10px;
-	        }
-	
-	        .university-name {
-	            color: #374151;
-	            font-size: 14px;
-	            font-weight: 600;
-	        }
-	
-	        .form-group {
-	            margin-bottom: 25px;
-	        }
-	
-	        .form-group label {
-	            display: block;
-	            color: #374151;
-	            font-weight: 600;
-	            margin-bottom: 8px;
-	            font-size: 16px;
-	        }
-	
-	        .form-group input {
-	            width: 100%;
-	            padding: 15px 20px;
-	            border: 2px solid #e5e7eb;
-	            border-radius: 12px;
-	            font-size: 16px;
-	            transition: all 0.3s ease;
-	            background: rgba(255, 255, 255, 0.8);
-	            backdrop-filter: blur(5px);
-	        }
-	
-	        .form-group input:focus {
-	            outline: none;
-	            border-color: #3b82f6;
-	            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-	            transform: translateY(-1px);
-	            background: rgba(255, 255, 255, 0.95);
-	        }
-	
-	        .form-group input::placeholder {
-	            color: #9ca3af;
-	        }
-	
-	        button {
-	            width: 100%;
-	            background: linear-gradient(135deg, #1e40af, #3b82f6);
-	            color: white;
-	            padding: 15px;
-	            border: none;
-	            border-radius: 12px;
-	            font-size: 16px;
-	            font-weight: 600;
-	            cursor: pointer;
-	            transition: all 0.3s ease;
-	            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
-	            margin-bottom: 25px;
-	        }
-	
-	        button:hover {
-	            transform: translateY(-2px);
-	            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
-	        }
-	
-	        button:active {
-	            transform: translateY(0);
-	        }
-	
-	        .error {
-	            background: linear-gradient(135deg, #fef2f2, #fee2e2);
-	            border: 1px solid #fca5a5;
-	            color: #dc2626;
-	            padding: 12px 16px;
-	            border-radius: 10px;
-	            margin-bottom: 20px;
-	            font-size: 14px;
-	            text-align: center;
-	            font-weight: 500;
-	        }
-	
-	        .login-links {
-	            text-align: center;
-	            padding-top: 25px;
-	            border-top: 1px solid #e5e7eb;
-	        }
-	
-	        .login-links p {
-	            color: #6b7280;
-	            margin-bottom: 15px;
-	            font-size: 14px;
-	        }
-	
-	        .login-links a {
-	            display: inline-block;
-	            background: rgba(59, 130, 246, 0.1);
-	            color: #1e40af;
-	            padding: 10px 20px;
-	            margin: 5px;
-	            border-radius: 25px;
-	            text-decoration: none;
-	            font-weight: 600;
-	            font-size: 14px;
-	            transition: all 0.3s ease;
-	            border: 1px solid rgba(59, 130, 246, 0.2);
-	        }
-	
-	        .login-links a:hover {
-	            background: rgba(59, 130, 246, 0.2);
-	            transform: translateY(-1px);
-	            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-	        }
-	
-	        @media (max-width: 480px) {
-	            .login-container {
-	                padding: 30px 25px;
-	                margin: 20px;
-	            }
-	
-	            .background-logo {
-	                width: 300px;
-	                height: 300px;
-	            }
-	
-	            .floating-shape {
-	                display: none;
-	            }
-	        }
-	
-	        /* Loading animation */
-	        .loading {
-	            opacity: 0.7;
-	            pointer-events: none;
-	        }
-	
-	        .loading button {
-	            background: linear-gradient(135deg, #9ca3af, #6b7280);
-	            position: relative;
-	        }
-	
-	        .loading button::after {
-	            content: '';
-	            position: absolute;
-	            top: 50%;
-	            left: 50%;
-	            width: 20px;
-	            height: 20px;
-	            margin: -10px 0 0 -10px;
-	            border: 2px solid transparent;
-	            border-top: 2px solid white;
-	            border-radius: 50%;
-	            animation: spin 1s linear infinite;
-	        }
-	
-	        @keyframes spin {
-	            0% { transform: rotate(0deg); }
-	            100% { transform: rotate(360deg); }
-	        }
-	    </style>
-	</head>
-	<body>
-	    <!-- Floating decorative shapes -->
-	    <div class="floating-shape"></div>
-	    <div class="floating-shape"></div>
-	    <div class="floating-shape"></div>
-	    <div class="floating-shape"></div>
-	
-	    <!-- Background FSM Logo -->
-	    <div class="background-logo"></div>
-	
-	    <div class="login-container">
-	        <div class="login-header">
-	            <div class="logo-container">
-	                <div class="main-logo">
-	                    <span class="logo-text">FSM</span>
-	                </div>
-	            </div>
-	            <h2>🎓 Connexion Enseignant</h2>
-	            <p class="login-subtitle">Espace réservé aux enseignants</p>
-	            <p class="university-name">Faculté des Sciences - Meknès</p>
-	        </div>
-	
-	        <form th:action="@{/login-enseignant}" method="post" id="loginForm">
-	            <div class="form-group">
-	                <label for="email">📧 Adresse email :</label>
-	                <input type="email" 
-	                       id="email"
-	                       name="email" 
-	                       placeholder="votre.email@umi.ac.ma"
-						   th:value="${lastEmail}"
-	                       required>
-						   
-	            </div>
-				<div class="form-group">
-				    <label>Mot de passe:</label>
-				    <input type="password" name="password" required>
-				</div>
-	            
-	            <button type="submit" id="submitBtn">
-	                🔐 Se connecter
-	            </button>
-	        </form>
-	
-	        <div th:if="${error}" class="error" th:text="${error}"></div>
-	        
-	        <div class="login-links">
-	            <p>Vous n'êtes pas enseignant ?</p>
-	            <a href="/loginAdmin">👨‍💼 Je suis administrateur</a>
-	        </div>
-	    </div>
-	
-	    <script>
-	        // Form submission with loading state
-			// Form submission with loading state
-			document.getElementById('loginForm').addEventListener('submit', function() {
-			    const submitBtn = document.getElementById('submitBtn');
-			    if (submitBtn) {
-			        submitBtn.textContent = 'Connexion en cours...';
-			        submitBtn.disabled = true;
-			        // On peut aussi ajouter une classe pour un effet visuel
-			        const container = document.querySelector('.login-container');
-			        if (container) {
-			            container.classList.add('loading');
-			        }
-			    }
-			});
-			
-	        // Add some interactive effects
-	        document.addEventListener('DOMContentLoaded', function() {
-	            const shapes = document.querySelectorAll('.floating-shape');
-	            
-	            shapes.forEach((shape, index) => {
-	                shape.style.animationDelay = `${index * 1.5}s`;
-	            });
-	        });
-	
-	        // Email validation
-	        const emailInput = document.getElementById('email');
-	        emailInput.addEventListener('input', function() {
-	            const email = this.value;
-	            const ucaDomain = email.endsWith('@uca.ma');
-	            
-	            if (email && !ucaDomain && email.includes('@')) {
-	                this.style.borderColor = '#f59e0b';
-	            } else if (ucaDomain) {
-	                this.style.borderColor = '#10b981';
-	            } else {
-	                this.style.borderColor = '#e5e7eb';
-	            }
-	        });
-	    </script>
-	</body>
-	</html>
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Enseignant</title>
+    <!-- On va importer une police Google Fonts (Poppins) pour un look moderne -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { height: 100%; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* On utilise un background plus simple et professionnel */
+            background-color: #f4f7fa; 
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px; /* Un peu plus grand */
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            text-align: center;
+            /* Animation d'entrée */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo-container { margin-bottom: 35px; }
+        .logo { width: 75px; height: auto; border-radius: 8px; }
+
+        .login-title h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1e3a8a; /* Bleu foncé pour le titre */
+            margin-bottom: 8px;
+        }
+        .login-title p {
+            color: #64748b; /* Gris pour le sous-titre */
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+
+        .form-group { position: relative; margin-bottom: 20px; text-align: left;}
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #4b5563;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .form-control:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background-color: #1e3a8a; /* Couleur principale */
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+        .login-btn:hover { background-color: #2563eb; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);}
+
+        .error-message {
+            background-color: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .footer-links {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .footer-links a { color: #3b82f6; text-decoration: none; font-weight: 500;}
+        .footer-links a:hover { text-decoration: underline; }
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-container">
+            <!-- Remplacez avec le logo de l'enseignant ou FSM si nécessaire -->
+            <img th:src="@{/images/logo.jpg}" alt="Logo" class="logo">
+        </div>
+
+        <div class="login-title">
+            <!-- On met un titre spécifique pour les enseignants -->
+            <h1>Espace Enseignant</h1>
+            <p>Veuillez vous authentifier pour accéder à votre tableau de bord.</p>
+        </div>
+
+        <form th:action="@{/login-enseignant}" method="post">
+            <div class="form-group">
+                <label for="email">Adresse Email</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="prenom.nom@fsm.ac.ma" required autocomplete="email" th:value="${lastEmail}">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="login-btn">Se connecter</button>
+
+            <!-- On affiche l'erreur si elle existe -->
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+        </form>
+        
+        <div class="footer-links">
+             <a th:href="@{/}">Accès Étudiant</a>
+             <span style="margin: 0 10px;">|</span>
+             <a th:href="@{/login-admin}">Accès Administrateur</a>
+        </div>
+    </div>
+</body>
+</html>

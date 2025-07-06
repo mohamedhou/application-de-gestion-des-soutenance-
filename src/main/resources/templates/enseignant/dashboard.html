@@ -110,22 +110,46 @@
             </table>
         </div>
 
-        <!-- Mes Soutenances Encadrées Section -->
-        <div class="section">
-            <div class="section-header"><h2>👨‍🏫 Mes Soutenances Encadrées</h2></div>
-            <div th:if="${#lists.isEmpty(soutenancesEncadrees)}" class="empty-state"><p>Aucune soutenance encadrée programmée.</p></div>
-            <table th:if="${not #lists.isEmpty(soutenancesEncadrees)}">
-                <thead><tr><th>Étudiant</th><th>Date & Heure</th><th>Salle</th><th>Sujet</th></tr></thead>
-                <tbody>
-                    <tr th:each="soutenance : ${soutenancesEncadrees}">
-                        <td th:text="${soutenance.etudiant?.prenom + ' ' + soutenance.etudiant?.nom}"></td>
-                        <td th:text="${#temporals.format(soutenance.date, 'dd MMMM yyyy, HH:mm')}"></td>
-                        <td th:text="${soutenance.salle?.nom}"></td>
-                        <td th:text="${soutenance.sujet?.titre}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+		<!-- SECTION: Mes Soutenances Encadrées -->
+		<div class="section">
+		    <div class="section-header"><h2>👨‍🏫 Mes Soutenances Encadrées</h2></div>
+		    <div th:if="${#lists.isEmpty(soutenancesEncadrees)}" class="empty-state"><p>Aucune soutenance encadrée programmée.</p></div>
+		    
+		    <table th:if="${not #lists.isEmpty(soutenancesEncadrees)}">
+		        <thead>
+		            <tr>
+		                <th>Étudiant</th>
+		                <th>Date & Heure</th>
+		                <th>Salle</th>
+		                <th>Sujet</th>
+		                <th>Actions</th> <!-- <-- ZEDNA COLONNE JDIDA -->
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr th:each="soutenance : ${soutenancesEncadrees}">
+		                <td th:text="${soutenance.etudiant?.prenom + ' ' + soutenance.etudiant?.nom}"></td>
+		                <td th:text="${#temporals.format(soutenance.date, 'dd MMMM yyyy, HH:mm')}"></td>
+		                <td th:text="${soutenance.salle?.nom}"></td>
+		                <td th:text="${soutenance.sujet?.titre}"></td>
+		                <td>
+		                    <!-- HNA L'IḌAFA L'MOHIMMA: KAN'AFFICHIW L'BOUTON GHIR ILA L'RAPPORT KAYN -->
+		                    <div th:if="${soutenance.rapport != null}">
+		                        <a th:href="@{/enseignant/telecharger-rapport/{id}(id=${soutenance.id})}"
+		                           class="action-button"
+		                           style="background-color: #4f46e5;"
+		                           target="_blank"> <!-- target="_blank" pour ouvrir dans un nouvel onglet -->
+		                           📄 Consulter Rapport
+		                        </a>
+		                    </div>
+		                    <!-- MESSAGE ILA MAZAL MA KAYN RAPPORT -->
+		                    <div th:if="${soutenance.rapport == null}" style="font-size: 13px; color: #6b7280;">
+		                        Pas de rapport
+		                    </div>
+		                </td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</div>
 
         <!-- Mes Soutenances en tant que Jury Section -->
         <div class="section">

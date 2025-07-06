@@ -1,417 +1,148 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Administrateur - FSM</title>
+    <title>Connexion Administrateur</title>
+    <!-- On va importer la même police Google Fonts (Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { height: 100%; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 25%, #81d4fa 50%, #4fc3f7 75%, #29b6f6 100%);
-            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa; 
+            color: #333;
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 100vh;
             padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Background decorative elements */
-        body::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* University logo in background */
-        .background-logo {
-            position: absolute;
-            top: 50px;
-            right: 50px;
-            width: 120px;
-            height: 120px;
-            opacity: 0.1;
-            z-index: 0;
-        }
-
-        .background-logo svg {
-            width: 100%;
-            height: 100%;
-            fill: rgba(255, 255, 255, 0.3);
         }
 
         .login-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 40px;
             width: 100%;
-            max-width: 450px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            z-index: 10;
-            transform: translateY(0);
-            transition: all 0.3s ease;
-        }
-
-        .login-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        .logo-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .main-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #1976d2, #42a5f5);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 30px rgba(25, 118, 210, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .main-logo::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-
-        .main-logo svg {
-            width: 50px;
-            height: 50px;
-            fill: white;
-            z-index: 2;
-            position: relative;
-        }
-
-        .login-container h2 {
-            text-align: center;
-            color: #1565c0;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #64b5f6;
-            font-size: 14px;
-            margin-bottom: 30px;
-            font-weight: 500;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            color: #1565c0;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e3f2fd;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
-            color: #1565c0;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #42a5f5;
+            max-width: 420px;
             background: white;
-            box-shadow: 0 0 0 3px rgba(66, 165, 245, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .form-group input::placeholder {
-            color: #90caf9;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #1976d2, #42a5f5);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .submit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .submit-btn:hover::before {
-            left: 100%;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(25, 118, 210, 0.3);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
-
-        .error {
-            background: linear-gradient(135deg, #ffebee, #ffcdd2);
-            color: #c62828;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            border-left: 4px solid #f44336;
-            font-size: 14px;
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        .login-links {
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
             text-align: center;
+            border-top: 5px solid #1a253c; /* Touche de couleur Admin */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo-container { margin-bottom: 35px; }
+        .logo { width: 70px; height: auto; border-radius: 8px; }
+
+        .login-title h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a253c; /* Bleu foncé pour le titre */
+            margin-bottom: 8px;
+        }
+        .login-title p {
+            color: #64748b; /* Gris pour le sous-titre */
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+
+        .form-group { position: relative; margin-bottom: 20px; text-align: left;}
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #4b5563;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .form-control:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+        
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background-color: #1a253c; /* Couleur Admin principale */
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+        .login-btn:hover { background-color: #2563eb; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);}
+
+        .error-message {
+            background-color: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .footer-links {
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid #e3f2fd;
-        }
-
-        .login-links p {
-            color: #64b5f6;
-            margin-bottom: 15px;
+            border-top: 1px solid #e5e7eb;
             font-size: 14px;
-            font-weight: 500;
+            color: #64748b;
         }
+        .footer-links a { color: #3b82f6; text-decoration: none; font-weight: 500;}
+        .footer-links a:hover { text-decoration: underline; }
 
-        .login-links a {
-            display: inline-block;
-            margin: 5px 10px;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, rgba(66, 165, 245, 0.1), rgba(25, 118, 210, 0.1));
-            color: #1976d2;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(66, 165, 245, 0.2);
-        }
-
-        .login-links a:hover {
-            background: linear-gradient(135deg, #42a5f5, #1976d2);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.3);
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .login-container {
-                margin: 10px;
-                padding: 30px 25px;
-            }
-
-            .background-logo {
-                width: 80px;
-                height: 80px;
-                top: 30px;
-                right: 30px;
-            }
-
-            .main-logo {
-                width: 60px;
-                height: 60px;
-            }
-
-            .main-logo svg {
-                width: 35px;
-                height: 35px;
-            }
-
-            .login-container h2 {
-                font-size: 24px;
-            }
-        }
-
-        /* Loading animation */
-        .loading {
-            opacity: 0.7;
-            pointer-events: none;
-        }
-
-        .loading .submit-btn {
-            background: linear-gradient(135deg, #90caf9, #64b5f6);
-        }
     </style>
 </head>
 <body>
-    <!-- Background University Logo -->
-    <div class="background-logo">
-        <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2"/>
-            <path d="M30 45 L50 25 L70 45 L50 35 Z" fill="currentColor"/>
-            <rect x="45" y="35" width="10" height="30" fill="currentColor"/>
-            <rect x="25" y="65" width="50" height="8" fill="currentColor"/>
-            <text x="50" y="85" text-anchor="middle" font-size="8" fill="currentColor">FSM</text>
-        </svg>
-    </div>
-
     <div class="login-container">
-        <div class="logo-header">
-            <div class="main-logo">
-                <svg viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <path d="M25 45 L50 20 L75 45 L50 30 Z" fill="currentColor"/>
-                    <rect x="45" y="30" width="10" height="25" fill="currentColor"/>
-                    <rect x="20" y="55" width="60" height="6" fill="currentColor"/>
-                    <circle cx="35" cy="70" r="3" fill="currentColor"/>
-                    <circle cx="50" cy="70" r="3" fill="currentColor"/>
-                    <circle cx="65" cy="70" r="3" fill="currentColor"/>
-                </svg>
-            </div>
-            <h2>Connexion Administrateur</h2>
-            <div class="subtitle">Faculté des Sciences - Meknès</div>
+        <div class="logo-container">
+            <!-- Logo spécifique si nécessaire -->
+            <img th:src="@{/images/logo.jpg}" alt="Logo" class="logo">
         </div>
 
-        <form th:action="@{/login-admin}" method="post" id="loginForm">
+        <div class="login-title">
+            <h1>Espace Administration</h1>
+            <p>Accès réservé au personnel administratif.</p>
+        </div>
+
+        <form th:action="@{/login-admin}" method="post">
             <div class="form-group">
-                <label for="email">📧 Adresse Email</label>
-                <input type="email" 
-                       name="email" 
-                       id="email"
-                       placeholder="admin@umi.fsm.ac.ma"
-					   th:value="${lastEmail}"
-                       required>
+                <label for="email">Adresse Email</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="admin@fsm.ac.ma" required autocomplete="email" th:value="${lastEmail}">
             </div>
-			<div class="form-group">
-			    <label>Mot de passe:</label>
-			    <input type="password" name="password" required>
-			</div>
+
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
+            </div>
             
-            <button type="submit" class="submit-btn" id="submitBtn">
-                🔐 Se connecter
-            </button>
+            <button type="submit" class="login-btn">Se connecter</button>
+
+            <!-- On affiche l'erreur si elle existe -->
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
         </form>
-
-        <div th:if="${error}" class="error" th:text="${error}"></div>
         
- 
+        <div class="footer-links">
+             <a th:href="@{/}">Accès Étudiant</a>
+             <span style="margin: 0 10px;">|</span>
+             <a th:href="@{/login-enseignant}">Accès Enseignant</a>
+        </div>
     </div>
-
-    <script>
-		// Form submission with loading state
-		document.getElementById('loginForm').addEventListener('submit', function() {
-		    const submitBtn = document.getElementById('submitBtn');
-		    if (submitBtn) {
-		        submitBtn.innerHTML = '⏳ Connexion en cours...';
-		        submitBtn.disabled = true;
-		        // On peut aussi ajouter une classe pour un effet visuel
-		        const container = document.querySelector('.login-container');
-		        if (container) {
-		            container.classList.add('loading');
-		        }
-		    }
-		});
-
-        // Email validation
-        document.getElementById('email').addEventListener('input', function() {
-            const email = this.value;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            if (email && !emailRegex.test(email)) {
-                this.style.borderColor = '#f44336';
-            } else {
-                this.style.borderColor = '#e3f2fd';
-            }
-        });
-
-        // Add floating animation to form
-        document.addEventListener('DOMContentLoaded', function() {
-            const container = document.querySelector('.login-container');
-            container.style.animation = 'slideIn 0.8s ease-out';
-        });
-
-        // CSS for slideIn animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
 </body>
 </html>

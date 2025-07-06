@@ -1,5 +1,6 @@
 package com.fsm.Soutenances.service;
 
+import com.fsm.Soutenances.dto.EnseignantDTO;
 import com.fsm.Soutenances.dto.EventDTO;
 import com.fsm.Soutenances.model.CreneauIndisponible;
 import com.fsm.Soutenances.model.Enseignant;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional // C'est une bonne pratique pour les services qui modifient la DB
+@Transactional
 public class CreneauIndisponibleService {
 
     @Autowired
@@ -23,8 +24,10 @@ public class CreneauIndisponibleService {
     @Autowired
     private EnseignantRepository enseignantRepo;
 
+    // =========== 1. MÉTHODES POUR LE CALENDRIER DE L'ENSEIGNANT ===========
+
     /**
-     * Convertit une liste de CreneauIndisponible en une liste de EventDTO pour FullCalendar.
+     * Récupère et convertit les indisponibilités en EventDTO pour FullCalendar.
      */
     public List<EventDTO> getCreneauxAsEvents(Long enseignantId) {
         return creneauRepo.findByEnseignantId(enseignantId).stream()
@@ -38,10 +41,9 @@ public class CreneauIndisponibleService {
     }
 
     /**
-     * Crée et sauvegarde un nouveau CreneauIndisponible à partir des données d'un EventDTO.
+     * Crée une nouvelle indisponibilité à partir d'un EventDTO envoyé par le frontend.
      */
-    public EventDTO addCreneauFromEvent(Long enseignantId, EventDTO eventDto) { // <-- L'type de retour ghaywelli EventDTO
-        // On récupère l'enseignant
+    public EventDTO addCreneauFromEvent(Long enseignantId, EventDTO eventDto) {
         Enseignant enseignant = enseignantRepo.findById(enseignantId)
                 .orElseThrow(() -> new RuntimeException("Enseignant non trouvé pour l'ID: " + enseignantId));
         
@@ -49,13 +51,11 @@ public class CreneauIndisponibleService {
         creneau.setEnseignant(enseignant);
         creneau.setDebut(eventDto.getStart());
         creneau.setFin(eventDto.getEnd());
-        // L'mochkil tani ghaykoun hna, 7ellito f l'point jjay
         creneau.setDescription(eventDto.getTitle());
 
-        // N'enregistriw l'entité f la base de données
         CreneauIndisponible savedCreneau = creneauRepo.save(creneau);
 
-        // Daba, nconvertiw l'entité li tsawvgardat l DTO 3ad nrej3oha
+        // Convertir l'entité sauvegardée en DTO pour la renvoyer
         return new EventDTO(
             savedCreneau.getId(),
             savedCreneau.getDescription(),
@@ -65,7 +65,7 @@ public class CreneauIndisponibleService {
     }
 
     /**
-     * Supprime un créneau d'indisponibilité par son ID.
+     * Supprime une indisponibilité par son ID.
      */
     public void deleteCreneau(Long creneauId) {
         if (!creneauRepo.existsById(creneauId)) {
@@ -74,36 +74,24 @@ public class CreneauIndisponibleService {
         creneauRepo.deleteById(creneauId);
     }
     
+    // =========== 2. MÉTHODE POUR LA PLANIFICATION PAR L'ADMIN ===========
     
     /**
-     *  Méthode N°1: Tjib lina la liste dyal les enseignants li DISPONIBLES
+     * Trouve les enseignants disponibles pour un créneau et une filière donnés.
      */
-    public List<Enseignant> findAvailableJuryMembers(LocalDateTime debut, LocalDateTime fin) {
-        // 1. Njbdo la liste dyal les IDs dyal les enseignants li 3AMRIN
-        List<Long> indisponibleIds = creneauRepo.findIndisponibleEnseignantIdsForPeriod(debut, fin);
+    @Transactional(readOnly = true)
+    public List<EnseignantDTO> findAvailableJuryMembers(LocalDateTime debutSoutenance, LocalDateTime finSoutenance, Long filiereId) {
+        
+        // 1. Récupérer les IDs des enseignants occupés dans ce créneau
+        List<Long> indisponibleIds = creneauRepo.findIndisponibleEnseignantIdsForPeriod(debutSoutenance, finSoutenance);
 
-        // 2. Njbdo ga3 les enseignants
-        List<Enseignant> allEnseignants = enseignantRepo.findAll();
+        // 2. Récupérer les enseignants de la filière spécifiée
+        List<Enseignant> enseignantsDeLaFiliere = enseignantRepo.findByFiliereId(filiereId);
 
-        // 3. N7iydo men ga3 les enseignants, hadouk li 3amrin
-        if (!indisponibleIds.isEmpty()) {
-            return allEnseignants.stream()
-                .filter(enseignant -> !indisponibleIds.contains(enseignant.getId()))
-                .collect(Collectors.toList());
-        } else {
-            // Ila kolchi disponible
-            return allEnseignants;
-        }
+        // 3. Filtrer pour ne garder que les disponibles et les convertir en DTO
+        return enseignantsDeLaFiliere.stream()
+            .filter(enseignant -> !indisponibleIds.contains(enseignant.getId()))
+            .map(enseignant -> new EnseignantDTO(enseignant.getId(), enseignant.getPrenom(), enseignant.getNom()))
+            .collect(Collectors.toList());
     }
-
-    /**
-     * Méthode N°2: Vérifier si un créneau est déjà pris par un enseignant
-     * Ghadi nst3mlouha 9bel man planifiw
-     */
-    public boolean isCreneauIndisponible(Long enseignantId, LocalDateTime debut, LocalDateTime fin) {
-        return !creneauRepo.findByEnseignantIdAndPeriodOverlap(enseignantId, debut, fin).isEmpty();
-    }
-    
-    
-    
 }

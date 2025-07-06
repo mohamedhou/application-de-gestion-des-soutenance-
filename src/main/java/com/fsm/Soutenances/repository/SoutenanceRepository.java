@@ -44,4 +44,15 @@ public interface SoutenanceRepository extends JpaRepository<Soutenance, Long> {
     List<Soutenance> findByJuryEnseignants(@Param("enseignant") Enseignant enseignant);
     
     Optional<Soutenance> findByEtudiant(Etudiant etudiant);
+    
+ // pour un encadrant spécifique.
+    @Query("SELECT s FROM Soutenance s JOIN s.sujet suj " +
+           "WHERE suj.encadrant.id = :enseignantId AND s.rapport IS NOT NULL")
+    List<Soutenance> findByEncadrantIdAndRapportIsNotNull(@Param("enseignantId") Long enseignantId);
+    
+    // ===========> ZID HADI L'METHODE L'JADIDA <===========
+    // Kayjib ga3 les enseignants li kayn f la liste dyal "filieresEnseignees"
+    // dyalhom l'ID dyal la filière li bghina
+    @Query("SELECT e FROM Enseignant e JOIN e.filieresEnseignees f WHERE f.id = :filiereId")
+    List<Enseignant> findByFiliereId(@Param("filiereId") Long filiereId);
 }

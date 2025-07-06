@@ -1,11 +1,12 @@
 package com.fsm.Soutenances.controller;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.fsm.Soutenances.model.*;
-import com.fsm.Soutenances.repository.*;
-import com.fsm.Soutenances.service.PdfGenerationService;
 
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -14,185 +15,131 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Optional;
+import com.fsm.Soutenances.model.*;
+import com.fsm.Soutenances.repository.*;
+import com.fsm.Soutenances.service.PdfGenerationService;
 
 @Controller
 @RequestMapping("/etudiant")
 public class EtudiantController {
     
-    @Autowired 
-    private SujetRepository sujetRepository;
-    
-    @Autowired 
-    private SoutenanceRepository soutenanceRepository;
-    
-    @Autowired
-    private EtudiantRepository etudiantRepository;
-    
-    @Autowired
-    private RapportRepository rapportRepository;
-    
-    
-    
-    @GetMapping("/dashboard")
-    @Transactional // <-- Annotation mohimma l la méthode li katjib des données LAZY
-    public String dashboard(HttpSession session, Model model) {
-        
-        // 1. Kanakhdo l'objet l'9dim men HttpSession bach n3erfo ghir l'ID
-        Object userFromSession = session.getAttribute("user");
-        if (!(userFromSession instanceof Etudiant)) {
-            return "redirect:/login-etudiant";
-        }
-        Long etudiantId = ((Etudiant) userFromSession).getId();
+    // Dépendances injectées (bonne pratique avec le constructeur)
+    private final SujetRepository sujetRepository;
+    private final SoutenanceRepository soutenanceRepository;
+    private final EtudiantRepository etudiantRepository;
+    private final RapportRepository rapportRepository;
+    private final PdfGenerationService pdfService;
 
-        // 2. HADA HOWA L'POINT L'MOHIM: Kan3awdo njbdo l'étudiant jdid men la base de données
-        Etudiant etudiant = etudiantRepository.findById(etudiantId)
-                .orElseThrow(() -> new RuntimeException("Étudiant non trouvé, veuillez vous reconnecter."));
-        
-        // 3. Daba, l'objet "etudiant" m'attaché l la session Hibernate.
-        // N9edro n accessiw les relations LAZY dyalo bla mochkil.
-        
-        model.addAttribute("etudiant", etudiant);
-        
-        // Hada l'code li kan 3ndek kayn, w daba ghadi ykhdem
-        // La liste des sujets est pour le cas où l'étudiant n'a pas encore de sujet
-        if(etudiant.getSujet() == null){
-            model.addAttribute("sujets", sujetRepository.findByValideTrueAndEtudiantIsNull());
-        }
-        
-        Soutenance soutenance = soutenanceRepository.findByEtudiant(etudiant).orElse(null);
-        model.addAttribute("soutenance", soutenance);
-        
-        model.addAttribute("hasSujet", etudiant.getSujet() != null);
-        model.addAttribute("hasRapport", soutenance != null && soutenance.getRapport() != null);
-        
-        return "etudiant/dashboard";
-    }
-   
-    
-    /**
-     * Méthode "Filter" privée pour vérifier si l'utilisateur est un étudiant connecté.
-     * Si ce n'est pas le cas, on le redirige vers le login.
-     * C'est une sécurité supplémentaire.
-     */
-    private boolean isUserNotStudent(HttpSession session) {
-        Object user = session.getAttribute("user");
-        // La condition retourne true si l'utilisateur n'est PAS un étudiant.
-        return !(user instanceof Etudiant);
+    @Autowired
+    public EtudiantController(SujetRepository sujetRepository, SoutenanceRepository soutenanceRepository,
+                              EtudiantRepository etudiantRepository, RapportRepository rapportRepository,
+                              PdfGenerationService pdfService) {
+        this.sujetRepository = sujetRepository;
+        this.soutenanceRepository = soutenanceRepository;
+        this.etudiantRepository = etudiantRepository;
+        this.rapportRepository = rapportRepository;
+        this.pdfService = pdfService;
     }
     
+    // ========== Default Redirect & Security Check ==========
     @GetMapping({"", "/"})
     public String redirectToDashboard() {
         return "redirect:/etudiant/dashboard";
     }
 
-//    @GetMapping("/dashboard")
-//    public String dashboard(HttpSession session, Model model) {
-//        Etudiant etudiant = (Etudiant) session.getAttribute("user");
-//        model.addAttribute("etudiant", etudiant);
-//        
-//        // Sujets validés disponibles
-//        model.addAttribute("sujets", sujetRepository.findByValideTrue());
-//        
-//        // Soutenance de l'étudiant
-//        Soutenance soutenance = getSoutenanceForEtudiant(etudiant);
-//        model.addAttribute("soutenance", soutenance);
-//        
-//        // Vérifier si l'étudiant a déjà un sujet
-//        boolean hasSujet = etudiant.getSujet() != null;
-//        model.addAttribute("hasSujet", hasSujet);
-//        
-//        // Vérifier si un rapport a été déposé
-//        if (soutenance != null && soutenance.getRapport() != null) {
-//            model.addAttribute("hasRapport", true);
-//        } else {
-//            model.addAttribute("hasRapport", false);
-//        }
-//        
-//        return "etudiant/dashboard";
-//    }
-
-    @PostMapping("/choisir-sujet/{sujetId}")
-    public String choisirSujet(@PathVariable Long sujetId, HttpSession session) {
-        Etudiant etudiant = (Etudiant) session.getAttribute("user");
+    private boolean isUserNotStudent(HttpSession session) {
+        return !(session.getAttribute("user") instanceof Etudiant);
+    }
+    
+    // ========== DASHBOARD ==========
+    @GetMapping("/dashboard")
+    @Transactional
+    public String dashboard(HttpSession session, Model model) {
+        if (isUserNotStudent(session)) return "redirect:/login-etudiant";
         
-        // Vérifier que l'étudiant n'a pas déjà un sujet
+        Long etudiantId = ((Etudiant) session.getAttribute("user")).getId();
+        Etudiant etudiant = etudiantRepository.findById(etudiantId).orElseThrow(() -> new RuntimeException("Étudiant introuvable."));
+        
+        model.addAttribute("etudiant", etudiant);
+        model.addAttribute("hasSujet", etudiant.getSujet() != null);
+
+        Soutenance soutenance = soutenanceRepository.findByEtudiant(etudiant).orElse(null);
+        model.addAttribute("soutenance", soutenance);
+        model.addAttribute("hasRapport", soutenance != null && soutenance.getRapport() != null);
+        
         if (etudiant.getSujet() == null) {
-            Sujet sujet = sujetRepository.findById(sujetId).orElse(null);
-            if (sujet != null) {
-                etudiant.setSujet(sujet);
-                etudiantRepository.save(etudiant);
+            if (etudiant.getFiliere() != null) {
+                model.addAttribute("sujets", sujetRepository.findSujetsDisponiblesPourFiliere(etudiant.getFiliere().getId()));
+            } else {
+                model.addAttribute("sujets", Collections.emptyList());
             }
         }
+        
+        return "etudiant/dashboard";
+    }
+
+    // ========== ACTIONS ÉTUDIANT ==========
+    @PostMapping("/choisir-sujet/{sujetId}")
+    @Transactional
+    public String choisirSujet(@PathVariable Long sujetId, HttpSession session, RedirectAttributes redirectAttributes) {
+        if (isUserNotStudent(session)) return "redirect:/login-etudiant";
+
+        Long etudiantId = ((Etudiant) session.getAttribute("user")).getId();
+        Etudiant etudiant = etudiantRepository.findById(etudiantId).orElseThrow(() -> new RuntimeException("Étudiant introuvable"));
+        
+        if (etudiant.getSujet() != null) {
+             redirectAttributes.addFlashAttribute("errorMessage", "Vous avez déjà un sujet.");
+             return "redirect:/etudiant/dashboard";
+        }
+        
+        Sujet sujetChoisi = sujetRepository.findById(sujetId).orElseThrow(() -> new RuntimeException("Sujet introuvable"));
+        
+        if(sujetChoisi.getEtudiant() != null){
+             redirectAttributes.addFlashAttribute("errorMessage", "Désolé, ce sujet a déjà été pris par un autre étudiant.");
+             return "redirect:/etudiant/dashboard";
+        }
+
+        etudiant.setSujet(sujetChoisi);
+        etudiantRepository.save(etudiant);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Sujet '" + sujetChoisi.getTitre() + "' choisi avec succès !");
         return "redirect:/etudiant/dashboard";
     }
-    
-    @GetMapping("/consulter-sujets")
-    public String consulterSujets(Model model) {
-        model.addAttribute("sujets", sujetRepository.findByValideTrue());
-        return "etudiant/consulterSujets";
-    }
-    
-//    @GetMapping("/telecharger-convocation")
-//    public ResponseEntity<Resource> telechargerConvocation(HttpSession session) {
-//        Etudiant etudiant = (Etudiant) session.getAttribute("user");
-//        Soutenance soutenance = getSoutenanceForEtudiant(etudiant);
-//        
-//        if (soutenance == null || soutenance.getConvocation() == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        
-//        Rapport convocation = soutenance.getConvocation();
-//        ByteArrayResource resource = new ByteArrayResource(convocation.getData());
-//        
-//        return ResponseEntity.ok()
-//            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + convocation.getNomFichier() + "\"")
-//            .contentType(MediaType.parseMediaType(convocation.getTypeMime()))
-//            .body(resource);
-//    }
-    
-    @GetMapping("/consulter-soutenance")
-    public String consulterSoutenance(HttpSession session, Model model) {
-        Etudiant etudiant = (Etudiant) session.getAttribute("user");
-        Soutenance soutenance = getSoutenanceForEtudiant(etudiant);
-        
-        if (soutenance == null) {
-            return "redirect:/etudiant/dashboard?error=no_soutenance";
-        }
-        
-        model.addAttribute("soutenance", soutenance);
-        return "etudiant/detailsSoutenance";
-    }
-    
+
+    // ==========> HADI HIYA LA METHODE L'JDIDA LI T'ZADET <==========
+    /**
+     * Affiche la page (formulaire) pour soumettre un rapport.
+     * Répond à la requête GET.
+     */
     @GetMapping("/soumettre-rapport")
-    public String soumettreRapportForm(HttpSession session, Model model) {
-        Etudiant etudiant = (Etudiant) session.getAttribute("user");
-        Soutenance soutenance = getSoutenanceForEtudiant(etudiant);
-        
-        if (soutenance == null) {
-            return "redirect:/etudiant/dashboard?error=no_soutenance";
+    public String showSoumettreRapportForm(HttpSession session) {
+        if (isUserNotStudent(session)) {
+            return "redirect:/login-etudiant";
         }
-        
-        model.addAttribute("soutenance", soutenance);
-        return "etudiant/soumettreRapport";
+        // Pas besoin d'envoyer de modèle, la page est simple
+        return "etudiant/soumettreRapport"; // Nom du fichier HTML à afficher
     }
-    
+
+    /**
+     * Traite la soumission du formulaire de rapport (le fichier uploadé).
+     * Répond à la requête POST.
+     */
     @PostMapping("/soumettre-rapport")
-    public String soumettreRapport(
-        @RequestParam("file") MultipartFile file,
-        HttpSession session
-    ) {
+    public String soumettreRapport(@RequestParam("file") MultipartFile file, HttpSession session, RedirectAttributes redirectAttributes) {
+        if (isUserNotStudent(session)) return "redirect:/login-etudiant";
+
         Etudiant etudiant = (Etudiant) session.getAttribute("user");
-        Soutenance soutenance = getSoutenanceForEtudiant(etudiant);
+        Soutenance soutenance = soutenanceRepository.findByEtudiant(etudiant).orElse(null);
         
         if (soutenance == null) {
-            return "redirect:/etudiant/dashboard?error=no_soutenance";
+            redirectAttributes.addFlashAttribute("errorMessage", "Action impossible: aucune soutenance n'est planifiée pour vous.");
+            return "redirect:/etudiant/dashboard";
         }
         
         try {
@@ -206,59 +153,53 @@ public class EtudiantController {
             soutenance.setRapport(rapport);
             soutenanceRepository.save(soutenance);
             
-            return "redirect:/etudiant/dashboard?success=rapport_soumis";
+            redirectAttributes.addFlashAttribute("successMessage", "Rapport soumis avec succès!");
         } catch (IOException e) {
-            return "redirect:/etudiant/soumettre-rapport?error=upload_failed";
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "Échec de l'envoi du rapport. Veuillez réessayer.");
+            return "redirect:/etudiant/soumettre-rapport";
         }
+        return "redirect:/etudiant/dashboard";
+    }
+
+    // ========== ACTIONS ÉTUDIANT ==========
+
+   
+    
+    // ========== CONSULTATION & TÉLÉCHARGEMENT ==========
+    
+    @GetMapping("/consulter-soutenance")
+    @Transactional 
+    public String consulterSoutenance(HttpSession session, Model model) {
+        if (isUserNotStudent(session)) { return "redirect:/login-etudiant"; }
+
+        Long etudiantId = ((Etudiant) session.getAttribute("user")).getId();
+        Soutenance soutenance = soutenanceRepository.findByEtudiant(etudiantRepository.findById(etudiantId).get())
+                .orElse(null); // ou .orElseThrow(...)
+        
+        model.addAttribute("soutenance", soutenance);
+        return "etudiant/detailsSoutenance";
     }
     
-    private Soutenance getSoutenanceForEtudiant(Etudiant etudiant) {
-        return soutenanceRepository.findByEtudiant(etudiant).orElse(null);
-    }
-    
-
- // F EtudiantController.java
-
-    @Autowired
-    private PdfGenerationService pdfService; // <-- ZID L'INJECTION DYAL SERVICE JADID
-
     @GetMapping("/telecharger-convocation")
     public ResponseEntity<Resource> telechargerConvocation(HttpSession session) {
-        if (isUserNotStudent(session)) {
-            // Redirection ne fonctionnera pas ici, on retourne un statut interdit
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        if (isUserNotStudent(session)) { return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); }
         
-        Etudiant etudiant = (Etudiant) session.getAttribute("user");
-        // On recharge l'étudiant pour être sûr que toutes les données sont à jour (surtout les relations)
-        etudiant = etudiantRepository.findById(etudiant.getId()).orElse(null);
-        if(etudiant == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        Long etudiantId = ((Etudiant) session.getAttribute("user")).getId();
+        Soutenance soutenance = soutenanceRepository.findByEtudiant(etudiantRepository.findById(etudiantId).get()).orElse(null);
         
-        Soutenance soutenance = soutenanceRepository.findByEtudiant(etudiant).orElse(null);
-        
-        if (soutenance == null) {
-            // Normalement ce cas est déjà géré par la logique d'affichage du bouton
-            return ResponseEntity.notFound().build();
-        }
+        if (soutenance == null) { return ResponseEntity.notFound().build(); }
         
         try {
-            // ==========> HNA FIN KAN3EYTO L SERVICE JADID <==========
             byte[] pdfBytes = pdfService.generateConvocationPdf(soutenance);
-            
-            ByteArrayResource resource = new ByteArrayResource(pdfBytes);
-            
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"convocation_" + etudiant.getNom() + ".pdf\"")
-                    .contentType(MediaType.APPLICATION_PDF) // <-- Le type de contenu correct
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"convocation.pdf\"")
+                    .contentType(MediaType.APPLICATION_PDF)
                     .contentLength(pdfBytes.length)
-                    .body(resource);
-
+                    .body(new ByteArrayResource(pdfBytes));
         } catch (Exception e) {
-            e.printStackTrace(); // Pour le débuggage
-            // On retourne une erreur 500 si la génération du PDF a échoué
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
-    
 }

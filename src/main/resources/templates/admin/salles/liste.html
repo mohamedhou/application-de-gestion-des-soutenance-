@@ -2,27 +2,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Salles - Admin</title>
-    <!-- On va utiliser un style similaire au reste du dashboard admin -->
+    <!-- Le style est propre et unifié -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; min-height: 100vh; color: #333; }
         .container { max-width: 900px; margin: 20px auto; padding: 20px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .header h1 { color: #1e3a8a; font-size: 28px; }
-        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; }
+        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; display:flex; align-items:center; gap:5px; }
         .section { background: white; border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .section h2 { color: #1e3a8a; font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #3b82f6; padding-bottom: 10px; }
-        .form-inline { display: flex; gap: 10px; margin-bottom: 20px; }
-        .form-inline input { flex-grow: 1; padding: 10px 15px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; }
-        .form-inline button { padding: 10px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; background: #16a34a; color: white; }
+        .form-inline { display: flex; gap: 10px; align-items: flex-end; }
+        .form-group { flex-grow: 1; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; font-size:14px; color: #4b5563;}
+        .form-inline input { width: 100%; padding: 10px 15px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; }
+        .form-inline button { padding: 10px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; background: #16a34a; color: white; height:43px;}
         table { width: 100%; border-collapse: collapse; }
-        table th { background: #f3f4f6; color: #374151; padding: 12px 15px; text-align: left; font-size: 14px; border-bottom: 2px solid #e5e7eb; }
+        table th { background: #f3f4f6; color: #374151; padding: 12px 15px; text-align: left; font-size: 13px; text-transform:uppercase; border-bottom: 2px solid #e5e7eb; }
         table td { padding: 12px 15px; border-bottom: 1px solid #e5e7eb; }
-        .delete-form button { background: none; border: none; color: #ef4444; font-weight: 600; cursor: pointer; }
+        .delete-form button { background: none; border: none; color: #ef4444; font-weight: 600; cursor: pointer; padding:0; }
         .delete-form button:hover { text-decoration: underline; }
-        .alert { padding: 15px; margin-bottom: 20px; border-radius: 8px; color: #fff; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 8px; color: #fff; font-weight: 500;}
         .alert-success { background: #22c55e; }
         .alert-error { background: #ef4444; }
     </style>
@@ -34,50 +35,51 @@
             <a th:href="@{/admin/dashboard}" class="back-link">← Retour au tableau de bord</a>
         </div>
         
-        <!-- Affichage des messages de succès/erreur -->
         <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
         <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
         
         <!-- Formulaire d'ajout -->
-		<!-- F admin/salles/liste.html -->
-		<!-- Formulaire d'ajout -->
-		<div class="section">
-		    <h2>Ajouter une nouvelle salle</h2>
-		    <!-- CORRECTION: Utilisation de th:object="${nouvelleSalle}" -->
-		    <form th:action="@{/admin/salles/ajouter}" th:object="${nouvelleSalle}" method="post" class="form-inline">
-		        <input type="text" th:field="*{nom}" placeholder="Nom de la salle (ex: Salle B12)" required>
-		        <!-- On s'assure que le type est 'number' pour la capacité -->
-		        <input type="number" th:field="*{capacite}" placeholder="Capacité" required min="1">
-		        <button type="submit">Ajouter</button>
-		    </form>
-		</div>
+        <div class="section">
+            <h2>Ajouter une nouvelle salle</h2>
+            <!-- On utilise l'objet 'sallePourAjout' -->
+            <form th:action="@{/admin/salles/ajouter}" th:object="${sallePourAjout}" method="post" class="form-inline">
+                <div class="form-group">
+                    <label for="nom">Nom de la salle</label>
+                    <input type="text" id="nom" th:field="*{nom}" placeholder="Ex: Salle B12" required>
+                </div>
+                <div class="form-group" style="flex-grow:0;">
+                    <label for="capacite">Capacité</label>
+                    <input type="number" id="capacite" th:field="*{capacite}" placeholder="30" required min="1" style="width:100px;">
+                </div>
+                <button type="submit">Ajouter</button>
+            </form>
+        </div>
 
-		<!-- Liste des salles existantes -->
-		<div class="section">
-		    <h2>Salles existantes</h2>
-		    <table>
-		        <thead>
-		            <tr>
-		                <th>Nom de la Salle</th>
-		                <th>Capacité</th>
-		                <th>Action</th>
-		            </tr>
-		        </thead>
-		        <tbody>
-		            <!-- S'assurer que la boucle est sur la bonne variable 'salles' -->
-		            <tr th:each="s : ${salles}">
-		                <td th:text="${s.nom}"></td>
-		                <td th:text="${s.capacite}"></td>
-		                <td>
-		                    <!-- Le formulaire de suppression est déjà bon -->
-		                    <form th:action="@{/admin/salles/supprimer/{id}(id=${s.id})}" method="post" 
-		                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?');">
-		                        <button type="submit" class="delete-form">Supprimer</button>
-		                    </form>
-		                </td>
-		            </tr>
-		        </tbody>
-		    </table>
-		</div>
+        <!-- Liste des salles -->
+        <div class="section">
+            <h2>Salles existantes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom de la Salle</th>
+                        <th>Capacité</th>
+                        <th style="text-align:right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="salle : ${salles}"> <!-- On itère sur la variable 'salle' (et non 's') -->
+                        <td th:text="${salle.nom}"></td>
+                        <td th:text="${salle.capacite}"></td>
+                        <td style="text-align:right;">
+                            <form th:action="@{/admin/salles/supprimer/{id}(id=${salle.id})}" method="post" 
+                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?');">
+                                <button type="submit" class="delete-form">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
