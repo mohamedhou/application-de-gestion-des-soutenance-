@@ -16,7 +16,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
             .addPathPatterns("/**") // 7mi kolchi
-            // ZID "/favicon.ico" HNA
             .excludePathPatterns(
                 "/", 
                 "/login-etudiant", 
