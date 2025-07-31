@@ -31,3 +31,39 @@ build/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
+=======
+
+# === Java ===
+*.class
+*.jar
+*.war
+*.ear
+
+# === Maven ===
+/target/
+
+# === Gradle ===
+/build/
+
+# === IntelliJ IDEA ===
+*.iml
+.idea/
+*.iws
+out/
+
+# === VS Code ===
+.vscode/
+
+# === Logs ===
+*.log
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Application Properties (optional if sensitive) ===
+# src/main/resources/application.properties
+# src/main/resources/application.yml
+
+>>>>>>> develop

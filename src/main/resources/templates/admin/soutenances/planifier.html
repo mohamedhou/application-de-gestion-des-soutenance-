@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Planifier une Soutenance</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7fa; color: #333; }
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { color: #1e3a8a; font-size: 28px; font-weight: 700; }
+        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px; }
+        .form-section { background: white; border-radius: 12px; padding: 30px 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; color: #374151; }
+        .form-control { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; background-color: #f9fafb;}
+        .form-control:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .btn { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 15px; }
+        .btn-secondary { background-color: #4f46e5; color: white; }
+        .btn-primary { background-color: #16a34a; color: white; }
+        .jury-section { margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5e7eb; display: none; }
+        .jury-section h3 { color: #1e3a8a; margin-bottom: 15px; }
+        #jury-list label { display: block; margin-bottom: 8px; padding: 10px; border-radius: 6px; background-color: #f9fafb; cursor: pointer;}
+        #jury-list input { margin-right: 10px; }
+        .form-actions { display: flex; justify-content: flex-end; margin-top: 30px; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 8px; color: #fff; background-color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Planifier une Nouvelle Soutenance</h1>
+            <a th:href="@{/admin/soutenances}" class="back-link"><span>←</span> Retour</a>
+        </div>
+        <div class="form-section">
+            <div th:if="${errorMessage}" class="alert" th:text="${errorMessage}"></div>
+            <!-- L'action est POST, et les champs seront récupérés par @RequestParam -->
+            <form th:action="@{/admin/soutenances/planifier}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="etudiant">Étudiant :</label>
+                        <!-- Le 'name' est 'etudiant' pour que le @RequestParam("etudiant") le trouve -->
+                        <select id="etudiant" name="etudiant" class="form-control" required>
+                            <option value="">-- Sélectionner un étudiant --</option>
+                            <option th:each="etud : ${etudiants}" th:value="${etud.id}" th:text="${etud.prenom + ' ' + etud.nom}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="salle">Salle :</label>
+                        <select id="salle" name="salle" class="form-control" required>
+                            <option value="">-- Sélectionner une salle --</option>
+                            <option th:each="s : ${salles}" th:value="${s.id}" th:text="${s.nom}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateSoutenance">Date :</label>
+                        <input type="date" id="dateSoutenance" name="dateSoutenance" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="heureSoutenance">Heure de début :</label>
+                        <input type="time" id="heureSoutenance" name="heureSoutenance" class="form-control" step="1800" required>
+                    </div>
+                </div>
+                
+                <button type="button" id="findJuryBtn" class="btn btn-secondary">🔍 Chercher Jury Disponible</button>
+                
+                <div id="jury-section" class="jury-section">
+                    <h3>Membres du Jury Disponibles</h3>
+                    <div id="jury-list">
+                        <!-- Le JavaScript remplira cette section -->
+                    </div>
+                </div>
+
+                <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">✓ Planifier la Soutenance</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- JavaScript corrigé et complet -->
+    <script>
+        document.getElementById('findJuryBtn').addEventListener('click', function() {
+            // ====> L'ÉLÉMENT CLÉ EST ICI <====
+            // 1. On récupère la valeur de l'étudiant sélectionné
+            const etudiantSelect = document.getElementById('etudiant');
+            const etudiantId = etudiantSelect.value;
+            
+            // On récupère les autres valeurs
+            const date = document.getElementById('dateSoutenance').value;
+            const heure = document.getElementById('heureSoutenance').value;
+            
+            // 2. Validation pour s'assurer que tout est sélectionné
+            if (!etudiantId || !date || !heure) {
+                alert('Veuillez sélectionner un étudiant, une date ET une heure avant de chercher un jury.');
+                return;
+            }
+
+            // 3. Construction de l'URL pour l'API avec les deux paramètres
+            const debutDateTime = `${date}T${heure}:00`;
+            const apiUrl = `/api/admin/enseignants-disponibles?debut=${debutDateTime}&etudiantId=${etudiantId}`;
+            
+            // Pour le debug, on affiche l'URL appelé dans la console du navigateur
+            console.log("Appel API vers: " + apiUrl);
+
+            // 4. Appel Fetch
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text || 'Erreur inconnue du serveur.') });
+                    }
+                    return response.json();
+                })
+                .then(enseignants => {
+                    const jurySection = document.getElementById('jury-section');
+                    const juryListDiv = document.getElementById('jury-list');
+                    juryListDiv.innerHTML = '';
+                    
+                    if (enseignants.length === 0) {
+                        juryListDiv.innerHTML = '<p style="color: #ef4444;">Aucun enseignant de cette filière n\'est disponible pour ce créneau.</p>';
+                    } else {
+                        enseignants.forEach(enseignant => {
+                            // On crée les checkboxes pour le formulaire
+                            juryListDiv.innerHTML += `
+                                <label style="display: block; cursor: pointer;">
+                                    <input type="checkbox" name="juryEnseignants" value="${enseignant.id}">
+                                    ${enseignant.prenom} ${enseignant.nom}
+                                </label>`;
+                        });
+                    }
+                    jurySection.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error("Erreur lors de la recherche du jury:", error);
+                    alert("Impossible de récupérer la liste des jurys.\n\nDétails de l'erreur:\n" + error.message);
+                });
+        });
+    </script>
+
+</body>
+</html>

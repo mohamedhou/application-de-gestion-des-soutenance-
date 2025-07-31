@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<<<<<<< HEAD
     <title>Tableau de bord - Administrateur</title>
 </head>
 <body>
@@ -75,5 +76,88 @@
             <td th:text="${soutenance.salle.nom}"></td>
         </tr>
     </table>
+=======
+    <meta charset="UTF-8">
+    <title>Tableau de bord - Admin</title>
+    <!-- On unifie le style -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7fa; color: #333; }
+        .container { max-width: 1400px; margin: 20px auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .header h1 { color: #1e3a8a; }
+        .logout-btn { background-color: #ef4444; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 500;}
+        .nav-links { display: flex; gap: 10px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); margin-bottom: 30px;}
+        .nav-link { padding: 10px 20px; text-decoration: none; font-weight: 500; color: #374151; border-radius: 8px; transition: all 0.2s; }
+        .nav-link:hover { background-color: #eef2ff; color: #4338ca;}
+        .section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); margin-bottom: 30px; }
+        .section-header { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+        .section-header h2 { color: #1e3a8a; font-size: 20px; font-weight: 600; margin: 0; }
+        table { width: 100%; border-collapse: collapse; }
+        table thead { border-bottom: 2px solid #e5e7eb; }
+        table th { padding: 12px 0; text-align: left; font-weight: 600; color: #4b5563; font-size: 13px; text-transform: uppercase;}
+        table td { padding: 15px 0; border-top: 1px solid #e5e7eb; }
+        .action-btn { background-color: #16a34a; color: white; padding: 8px 16px; border: none; cursor: pointer; border-radius: 6px; }
+        .empty-state { text-align: center; padding: 40px; color: #6b7280; background: #f9fafb; border-radius: 8px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>Tableau de bord Administrateur</h1>
+        <a th:href="@{/logout}" class="logout-btn">Déconnexion</a>
+    </div>
+
+    <!-- Message de succès/erreur -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <div class="nav-links">
+        <a th:href="@{/admin/soutenances}" class="nav-link">Gérer les Soutenances</a>
+        <a th:href="@{/admin/utilisateurs}" class="nav-link">Gérer les Utilisateurs</a>
+        <a th:href="@{/admin/salles}" class="nav-link">Gérer les Salles</a>
+    </div>
+
+    <div class="section">
+        <div class="section-header"><h2>📝 Sujets en attente de validation</h2></div>
+        <div th:if="${#lists.isEmpty(sujets.?[!valide])}" class="empty-state"><p>Aucun sujet en attente.</p></div>
+        <table th:if="${not #lists.isEmpty(sujets.?[!valide])}">
+            <thead><tr><th>Titre</th><th>Description</th><th>Encadrant Proposé</th><th>Action</th></tr></thead>
+            <tbody>
+                <tr th:each="sujet : ${sujets}" th:if="${!sujet.valide}">
+                    <td th:text="${sujet.titre}"></td>
+                    <td th:text="${sujet.description}"></td>
+                    <td th:text="${sujet.encadrant?.prenom + ' ' + sujet.encadrant?.nom}"></td>
+                    <td>
+                        <form th:action="@{/admin/sujets/valider/{id}(id=${sujet.id})}" method="get">
+                             <button type="submit" class="action-btn">✓ Valider</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <h2>🎓 Dernières soutenances planifiées</h2>
+            <a th:href="@{/admin/soutenances}" style="text-decoration:none; color:#3b82f6; font-weight:500;">Voir tout →</a>
+        </div>
+        <div th:if="${#lists.isEmpty(soutenances)}" class="empty-state"><p>Aucune soutenance planifiée.</p></div>
+        <table th:if="${not #lists.isEmpty(soutenances)}">
+            <thead><tr><th>Étudiant</th><th>Sujet</th><th>Date & Heure</th><th>Salle</th></tr></thead>
+            <tbody>
+                <tr th:each="soutenance, iterStat : ${soutenances}" th:if="${iterStat.count <= 5}">
+                    <td th:text="${soutenance.etudiant?.prenom + ' ' + soutenance.etudiant?.nom}"></td>
+                    <td th:text="${soutenance.sujet?.titre}"></td>
+                    <td th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${soutenance.salle?.nom}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+>>>>>>> develop
 </body>
 </html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Calendrier d'Indisponibilités</title>
+
+    <!-- 1. Importer la librairie FullCalendar -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    
+    <!-- 2. Style pour le calendrier et la page -->
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding: 20px; }
+        #calendar-container { max-width: 1100px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .fc-event { cursor: pointer; } /* Pour montrer qu'on peut cliquer */
+        .header { margin-bottom: 20px; text-align: center; }
+        .header h1 { color: #2c3e50; }
+        .header p { color: #7f8c8d; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-weight: bold;}
+    </style>
+</head>
+<body>
+    <div id="calendar-container">
+        <a th:href="@{/enseignant/dashboard}" class="back-link">← Retour au tableau de bord</a>
+        <div class="header">
+            <h1>Mon Calendrier d'Indisponibilités</h1>
+            <p>Cliquez et glissez sur un créneau pour le marquer comme indisponible. Cliquez sur un créneau existant pour le supprimer.</p>
+        </div>
+        <div id='calendar'></div>
+    </div>
+
+    <!-- 3. Le script JavaScript qui fait fonctionner le calendrier -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // On récupère l'ID de l'enseignant depuis le modèle
+            const enseignantId = /*[[${enseignantId}]]*/ null;
+            if (!enseignantId) {
+                console.error("ID de l'enseignant non trouvé !");
+                return;
+            }
+
+            const calendarEl = document.getElementById('calendar');
+            const apiBaseUrl = '/api/enseignant/' + enseignantId + '/disponibilites';
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek', // Vue par semaine avec les heures
+                slotMinTime: '08:00:00',     // Commence à 8h
+                slotMaxTime: '19:00:00',     // Finit à 19h
+                allDaySlot: false,           // On n'affiche pas la case "toute la journée"
+                
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                
+                // On récupère les indisponibilités existantes depuis notre API
+                events: apiBaseUrl, 
+
+                selectable: true,  // Permet de sélectionner un créneau
+                editable: false,   // On désactive le drag-and-drop pour l'instant (plus simple)
+                
+                // Déclenché quand l'utilisateur sélectionne un créneau avec la souris
+				select: function(selectionInfo) {
+				    const title = prompt('Description de l\'indisponibilité :', 'Indisponible');
+
+				    if (title === null) {
+				        calendar.unselect();
+				        return;
+				    }
+				    
+				    const newEvent = {
+				        title: title.trim() === '' ? 'Indisponible' : title.trim(),
+				        // CORRECTION: .toISOString() kat3ti format standard li kayfhemha l'backend
+				        start: selectionInfo.start.toISOString(), 
+				        end: selectionInfo.end.toISOString()
+				    };
+
+				    // On envoie la nouvelle indisponibilité à notre API
+				    fetch(apiBaseUrl, {
+				        method: 'POST',
+				        headers: { 'Content-Type': 'application/json' },
+				        body: JSON.stringify(newEvent)
+				    })
+				    .then(response => {
+				        if (!response.ok) {
+				            // Hada code zwin bach n'affichew l'erreur s7i7a
+				            return response.text().then(text => { throw new Error(text || 'Erreur serveur inconnue') });
+				        }
+				        return response.json();
+				    })
+				    .then(data => {
+				        console.log('Créneau ajouté avec succès:', data);
+				        calendar.refetchEvents(); // Recharge les événements pour afficher le nouveau
+				    })
+				    .catch(error => {
+				        console.error("Erreur lors de l'ajout:", error);
+				        alert("Impossible d'ajouter le créneau.\n\nDétail: " + error.message);
+				    });
+
+				    calendar.unselect();
+				},
+
+                // Déclenché quand l'utilisateur clique sur un événement existant
+                eventClick: function(clickInfo) {
+                    if (confirm("Voulez-vous vraiment supprimer cette indisponibilité ?")) {
+                        const creneauId = clickInfo.event.id;
+                        
+                        // On envoie une requête DELETE à notre API
+                        fetch('/api/enseignant/disponibilites/' + creneauId, {
+                            method: 'DELETE'
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Erreur serveur');
+                            console.log('Créneau supprimé:', creneauId);
+                            clickInfo.event.remove(); // On supprime l'événement de l'affichage
+                        })
+                        .catch(error => {
+                             console.error("Erreur lors de la suppression:", error);
+                             alert("Impossible de supprimer le créneau.");
+                        });
+                    }
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+</body>
+</html>

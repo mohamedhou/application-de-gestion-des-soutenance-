@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connexion Étudiant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('/images/back1.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-container {
+      background: white;
+      padding: 50px 35px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px; /* augmenté de ~10% */
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      animation: slideInFade 0.8s ease forwards;
+      opacity: 0;
+      transform: translate(90px, 50px); /* départ à droite et bas */
+    }
+
+    @keyframes slideInFade {
+      to {
+        opacity: 1;
+        transform: translate(0, 0);
+      }
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo-container img {
+      max-width: 130px;
+    }
+
+    .login-title h1 {
+      font-size: 26px;
+      text-align: center;
+      color: #1a253c;
+      margin-bottom: 6px;
+    }
+
+    .login-title p {
+      font-size: 14px;
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 13px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .form-control:focus {
+      border-color: #2563eb;
+      outline: none;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 16px;
+      color: #999;
+    }
+
+    .login-links {
+      font-size: 13px;
+      color: #555;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .login-links a {
+      color: #2563eb;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background-color: #1a253c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .login-btn:hover {
+      background-color: #2563eb;
+    }
+
+    .error-message {
+      margin-top: 10px;
+      background-color: #fee2e2;
+      color: #dc2626;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        margin: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo-container">
+      <img th:src="@{/images/logo.jpg}" alt="Logo Faculté" />
+    </div>
+
+    <div class="login-title">
+      <h1>Connexion</h1>
+      <p>C'est notre grand plaisir de vous avoir ici</p>
+    </div>
+
+    <form th:action="@{/login-etudiant}" method="post">
+      <div class="form-group">
+        <input type="email" name="email" class="form-control" placeholder="Login (Email)" required autocomplete="email" th:value="${lastEmail}" />
+      </div>
+
+      <div class="form-group">
+        <input type="password" name="password" id="password" class="form-control" placeholder="Mot de passe" required />
+        <span class="eye-icon" onclick="togglePasswordVisibility()">👁️</span>
+      </div>
+
+      <div class="login-links">
+        <p>Vous êtes un membre du personnel ?</p>
+        <a href="https://my.umi.ac.ma/#/myumi/login" target="_blank">🔐 Oublié le mot de passe ?</a>
+      </div>
+
+      <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+      <button type="submit" class="login-btn">Se connecter</button>
+    </form>
+  </div>
+
+  <script>
+    function togglePasswordVisibility() {
+      const input = document.getElementById("password");
+      input.type = input.type === "password" ? "text" : "password";
+    }
+  </script>
+</body>
+</html>

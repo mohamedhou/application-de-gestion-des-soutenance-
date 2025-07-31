@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<<<<<<< HEAD
     <title>Proposer un sujet</title>
 </head>
 <body>
@@ -16,5 +17,115 @@
         </div>
         <button type="submit">Soumettre</button>
     </form>
+=======
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposer un Nouveau Sujet</title>
+    <!-- On va unifier le style -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7fa; color: #333; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;}
+        .container { max-width: 800px; width: 100%; margin: 20px auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #1e3a8a; font-size: 28px; font-weight: 600; margin-bottom: 5px;}
+        .header .subtitle { color: #64748b; font-size: 15px; }
+        .form-container { background: white; border-radius: 12px; padding: 30px 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #4b5563; }
+        .form-group input,
+        .form-group textarea,
+        .form-group select { /* On ajoute le style pour le select */
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background-color: #f9fafb;
+            transition: all 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            background-color: white;
+        }
+        .form-group textarea { resize: vertical; min-height: 140px; }
+        .char-counter { font-size: 12px; color: #6b7280; text-align: right; margin-top: 5px; }
+        .char-counter.error { color: #ef4444; font-weight: 500;}
+        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+        .action-button { padding: 12px 30px; border-radius: 8px; border: none; font-weight: 500; font-size: 15px; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+        .btn-back { background-color: #e5e7eb; color: #4b5563; }
+        .btn-back:hover { background-color: #d1d5db; }
+        .btn-submit { background-color: #16a34a; color: white; }
+        .btn-submit:hover { background-color: #15803d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Proposer un Nouveau Sujet</h1>
+            <p class="subtitle">Le sujet sera soumis à la validation de l'administration.</p>
+        </div>
+
+        <div class="form-container">
+            <!-- Pas besoin de th:object si on ne fait pas de binding complet -->
+            <form th:action="@{/enseignant/proposer-sujet}" method="post" id="subjectForm">
+                
+                <div class="form-group">
+                    <label for="titre">Titre du Sujet</label>
+                    <input type="text" name="titre" id="titre" placeholder="Ex: Développement d'une application de gestion..." required maxlength="150">
+                    <div class="char-counter" id="titleCounter">0/150</div>
+                </div>
+
+                <!-- ===================== LISTE DÉROULANTE POUR LA FILIÈRE ===================== -->
+                <div class="form-group">
+                    <label for="filiereId">Concerne la filière :</label>
+                    <select id="filiereId" name="filiereId" required>
+                        <option value="">-- Sélectionnez une filière --</option>
+                        <option th:each="filiere : ${filieres}" 
+                                th:value="${filiere.id}" 
+                                th:text="${filiere.nom}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description Détaillée du Sujet</label>
+                    <textarea name="description" id="description" placeholder="Décrivez le contexte, les objectifs, les technologies..." required maxlength="1000"></textarea>
+                    <div class="char-counter" id="descCounter">0/1000</div>
+                </div>
+
+                <div class="form-actions">
+                    <a th:href="@{/enseignant/dashboard}" class="action-button btn-back">
+                        ← Annuler
+                    </a>
+                    <button type="submit" class="action-button btn-submit">
+                        🚀 Soumettre la Proposition
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Le JavaScript reste fonctionnel -->
+    <script>
+        function setupCharCounter(inputId, counterId, maxLength) {
+            const inputEl = document.getElementById(inputId);
+            const counterEl = document.getElementById(counterId);
+            function update() {
+                const len = inputEl.value.length;
+                counterEl.textContent = `${len}/${maxLength}`;
+                counterEl.classList.toggle('error', len > maxLength);
+            }
+            inputEl.addEventListener('input', update);
+            update();
+        }
+
+        setupCharCounter('titre', 'titleCounter', 150);
+        setupCharCounter('description', 'descCounter', 1000);
+    </script>
+>>>>>>> develop
 </body>
 </html>

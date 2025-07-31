@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Soutenances - Admin</title>
+    <!-- On va unifier le style pour être professionnel -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f4f8; min-height: 100vh; color: #333; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { color: #1e3a8a; font-size: 28px; font-weight: 700; }
+        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 5px; }
+        .back-link:hover { text-decoration: underline; }
+        .section { background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
+        .section-header { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #e5e7eb; }
+        .section-header h2 { color: #1e3a8a; font-size: 22px; }
+        .search-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; align-items: flex-end; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; color: #4b5563; font-size: 14px;}
+        .form-control { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #d1d5db; background-color: #f9fafb; transition: all 0.2s; }
+        .form-control:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .submit-btn { padding: 12px 25px; border-radius: 8px; border: none; font-weight: 600; background-color: #3b82f6; color: white; width: 100%; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        table thead { border-bottom: 2px solid #e5e7eb; }
+        table th { padding: 12px 15px; text-align: left; font-weight: 600; color: #4b5563; text-transform: uppercase; font-size: 12px; }
+        table td { padding: 15px; border-top: 1px solid #e5e7eb; }
+        .empty-state { text-align: center; padding: 50px; background: #f9fafb; border-radius: 8px; margin-top: 20px;}
+        .empty-state p { font-size: 16px; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Recherche Avancée de Soutenances</h1>
+            <a th:href="@{/admin/soutenances}" class="back-link">
+                <span>←</span> Retour à la liste complète
+            </a>
+        </div>
+
+        <!-- Section des Filtres -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Filtres de recherche</h2>
+            </div>
+            <form th:action="@{/admin/soutenances/rechercher}" method="get" class="search-form">
+                <!-- Filtre par Encadrant -->
+                <div class="form-group">
+                    <label for="enseignantId">Par Encadrant :</label>
+                    <select name="enseignantId" id="enseignantId" class="form-control">
+                        <option value="">Tous les encadrants</option>
+                        <!-- CORRECTION: Utilisation de param et #strings.equals pour la sécurité et la propreté -->
+                        <option th:each="ens : ${enseignants}" 
+                                th:value="${ens.id}" 
+                                th:text="${ens.prenom + ' ' + ens.nom}"
+                                th:selected="${param.enseignantId != null and #strings.equals(param.enseignantId, ens.id)}"></option>
+                    </select>
+                </div>
+                
+                <!-- Filtre par Étudiant -->
+                <div class="form-group">
+                    <label for="etudiantId">Par Étudiant :</label>
+                    <select name="etudiantId" id="etudiantId" class="form-control">
+                        <option value="">Tous les étudiants</option>
+                        <option th:each="etud : ${etudiants}" 
+                                th:value="${etud.id}" 
+                                th:text="${etud.prenom + ' ' + etud.nom}"
+                                th:selected="${param.etudiantId != null and #strings.equals(param.etudiantId, etud.id)}"></option>
+                    </select>
+                </div>
+                
+                <!-- Filtre par Date -->
+                <div class="form-group">
+                    <label for="date">Par Date :</label>
+                    <input type="date" name="date" id="date" class="form-control" th:value="${param.date}">
+                </div>
+                
+                <div class="form-group">
+                    <label> </label> <!-- Pour l'alignement -->
+                    <button type="submit" class="submit-btn">🔍 Rechercher</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Section des Résultats -->
+        <div class="section">
+            <div class="section-header">
+                <h2>Résultats</h2>
+            </div>
+            <!-- Si l'admin vient d'arriver à la page (aucune recherche effectuée) -->
+            <div th:if="${soutenances == null}" class="empty-state">
+                 <p>Effectuez une recherche pour afficher les résultats ici.</p>
+            </div>
+            <!-- Si l'admin a fait une recherche mais aucun résultat n'a été trouvé -->
+            <div th:if="${soutenances != null and #lists.isEmpty(soutenances)}" class="empty-state">
+                <p>🤷‍♂️ Aucun résultat trouvé pour vos critères de recherche.</p>
+            </div>
+
+            <!-- Si des résultats ont été trouvés, on affiche le tableau -->
+            <table th:if="${soutenances != null and not #lists.isEmpty(soutenances)}">
+                <thead>
+                    <tr>
+                        <th>Étudiant</th>
+                        <th>Sujet</th>
+                        <th>Date & Heure</th>
+                        <th>Salle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="soutenance : ${soutenances}">
+                        <td th:text="${soutenance.etudiant?.prenom + ' ' + soutenance.etudiant?.nom}">N/A</td>
+                        <td th:text="${soutenance.sujet?.titre}">N/A</td>
+                        <td th:text="${soutenance.date != null} ? ${#temporals.format(soutenance.date, 'dd MMMM yyyy, HH:mm')} : 'N/A'"></td>
+                        <td th:text="${soutenance.salle?.nom}">N/A</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

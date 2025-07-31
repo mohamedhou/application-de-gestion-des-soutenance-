@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accueil - FSM</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px;
+        }
+        
+        .header {
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #0369a1;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #64748b;
+            font-size: 18px;
+        }
+        
+        .role-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .role-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 220px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .role-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .role-card h3 {
+            color: #0ea5e9;
+            margin-bottom: 15px;
+        }
+        
+        .role-card p {
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Faculté des Sciences - Meknès</h1>
+            <p>Plateforme de gestion des soutenances</p>
+        </div>
+        
+        <div class="role-cards">
+            <div class="role-card" onclick="location.href='/login-etudiant'">
+                <div class="role-icon">🎓</div>
+                <h3>Étudiant</h3>
+                <p>Accéder à votre espace pour gérer votre soutenance</p>
+            </div>
+            
+            <div class="role-card" onclick="location.href='/login-enseignant'">
+                <div class="role-icon">👨‍🏫</div>
+                <h3>Enseignant</h3>
+                <p>Espace dédié aux encadrants et membres de jury</p>
+            </div>
+            
+            <div class="role-card" onclick="location.href='/login-admin'">
+                <div class="role-icon">👨‍💼</div>
+                <h3>Administrateur</h3>
+                <p>Interface d'administration du système</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Faculté des Sciences de Meknès</p>
+            <p>Tous droits réservés</p>
+        </div>
+    </div>
+</body>
+</html>

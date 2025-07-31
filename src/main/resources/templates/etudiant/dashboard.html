@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<<<<<<< HEAD
     <title>Tableau de bord - Étudiant</title>
 </head>
 <body>
@@ -30,6 +31,153 @@
             <span th:each="jury : ${soutenance.jurys}" 
                   th:text="${jury.nom + ' ' + jury.prenom + (juryStat.last ? '' : ', ')}"></span>
         </p>
+=======
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - Étudiant</title>
+    <!-- On va unifier le style -->
+    <style>
+        /* Base & Body */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7fa; min-height: 100vh; color: #333; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+
+        /* Header Style */
+        .header { background: white; border-radius: 12px; padding: 20px 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .logo { width: 50px; height: 50px; /* Adaptez la taille si nécessaire */ }
+        .welcome-section h1 { color: #1e3a8a; font-size: 24px; font-weight: 600; }
+        .welcome-section .subtitle { color: #64748b; font-size: 14px; }
+        .logout-btn { background-color: #ef4444; color: white; padding: 10px 20px; border: none; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
+        
+        /* Section & Card Styles */
+        .section { background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .section-header { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb; }
+        .section-header h2 { color: #1e3a8a; font-size: 20px; font-weight: 600; }
+        
+        /* Subject & Defense Info Cards */
+        .info-card { background: #f9fafb; border-radius: 8px; padding: 25px; border: 1px solid #e5e7eb; margin-bottom: 20px;}
+        .info-card h3 { color: #1e40af; font-size: 18px; margin-bottom: 10px; }
+        .info-card p { color: #4b5563; line-height: 1.6; }
+
+        /* Soutenance Details Grid */
+        .defense-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .info-item { display: flex; align-items: center; gap: 15px; background: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb;}
+        .info-icon { font-size: 24px; color: #3b82f6; }
+        .info-label { font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: 500;}
+        .info-value { font-size: 16px; color: #1e3a8a; font-weight: 600; }
+        
+        /* Action Grid */
+        .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 25px; }
+        .action-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; text-align: center; transition: all 0.2s; }
+        .action-card:hover { transform: translateY(-5px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); border-color: #3b82f6;}
+        .action-icon { font-size: 32px; color: #3b82f6; margin-bottom: 10px; }
+        .action-title { font-weight: 600; color: #1e3a8a; margin-bottom: 15px; }
+        .action-button { background-color: #3b82f6; color: white; padding: 10px 25px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: 500; }
+        .status-submitted { background-color: #22c55e; color: white; padding: 10px 25px; border-radius: 6px; font-size: 14px; font-weight: 500; display: inline-block; }
+        
+        /* Table for Available Subjects */
+        table { width: 100%; border-collapse: collapse; }
+        table thead { border-bottom: 2px solid #e5e7eb; }
+        table th { padding: 12px 0; text-align: left; font-weight: 600; color: #4b5563; font-size: 13px; text-transform: uppercase; }
+        table td { padding: 15px 0; border-top: 1px solid #e5e7eb; }
+        .choose-btn { background-color: #16a34a; color: white; padding: 8px 16px; border-radius: 6px; font-size: 13px; text-decoration: none; }
+        
+        .empty-state { text-align: center; padding: 40px; color: #6b7280; background-color: #f9fafb; border-radius: 8px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">
+                    <img th:src="@{/images/logo.jpg}" alt="Logo FSM" style="width: 70px; height: auto;">
+					
+                </div>
+                <div class="welcome-section">
+                    <h1> Bienvenue, <span th:text="${etudiant.prenom}"></span>!</h1>
+                    <div class="subtitle">Votre espace personnel</div>
+                </div>
+            </div>
+            <a th:href="@{/logout}" class="logout-btn">Déconnexion</a>
+        </div>
+
+        <!-- Section 1: Étudiant n'a PAS de sujet -->
+        <div th:if="${!hasSujet}" class="section">
+            <div class="section-header"><h2>📚 Sujets Disponibles</h2></div>
+            <p style="margin-bottom: 20px; color: #64748b;">Veuillez choisir un sujet parmi la liste ci-dessous pour continuer.</p>
+            <table>
+                <thead><tr><th>Titre</th><th>Description</th><th>Action</th></tr></thead>
+                <tbody>
+                    <tr th:each="sujet : ${sujets}">
+                        <td th:text="${sujet.titre}"></td>
+                        <td th:text="${sujet.description}"></td>
+                        <td>
+                            <!-- Formulaire pour l'action POST -->
+                            <form th:action="@{/etudiant/choisir-sujet/{id}(id=${sujet.id})}" method="post">
+                                <button type="submit" class="choose-btn">Choisir</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 2: Étudiant A un sujet -->
+        <div th:if="${hasSujet}" class="section">
+            <div class="section-header"><h2>📖 Mon Sujet Affecté</h2></div>
+            <div class="info-card">
+                <h3 th:text="${etudiant.sujet.titre}">Titre du sujet</h3>
+                <p th:text="${etudiant.sujet.description}">Description du sujet.</p>
+            </div>
+
+            <!-- Affichage de la soutenance si elle existe -->
+            <div th:if="${soutenance}" style="margin-top: 30px;">
+                <div class="section-header" style="margin-bottom: 20px;">
+                    <h2>🎓 Informations sur ma Soutenance</h2>
+                </div>
+                <div class="defense-info-grid">
+                    <div class="info-item"><span class="info-icon">📅</span><div><div class="info-label">Date</div><div class="info-value" th:text="${#temporals.format(soutenance.date, 'dd MMMM yyyy')}"></div></div></div>
+                    <div class="info-item"><span class="info-icon">🕒</span><div><div class="info-label">Heure</div><div class="info-value" th:text="${#temporals.format(soutenance.date, 'HH:mm')}"></div></div></div>
+                    <div class="info-item"><span class="info-icon">🏢</span><div><div class="info-label">Salle</div><div class="info-value" th:text="${soutenance.salle.nom}"></div></div></div>
+                </div>
+
+                <div class="action-grid">
+                    <div class="action-card">
+                        <div class="action-icon">📄</div>
+                        <div class="action-title">Convocation</div>
+                        <a th:href="@{/etudiant/telecharger-convocation}" class="action-button">Télécharger</a>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">👁️</div>
+                        <div class="action-title">Détails Complet</div>
+                        <a th:href="@{/etudiant/consulter-soutenance}" class="action-button">Consulter</a>
+                    </div>
+                    <div class="action-card" th:if="${!hasRapport}">
+                        <div class="action-icon">📝</div>
+                        <div class="action-title">Déposer le Rapport</div>
+                        <a th:href="@{/etudiant/soumettre-rapport}" class="action-button">Soumettre</a>
+                    </div>
+                    <div class="action-card" th:if="${hasRapport}">
+                        <div class="action-icon" style="color:#22c55e;">✅</div>
+                        <div class="action-title">Rapport Soumis</div>
+                        <div class="status-submitted">Déjà déposé</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message si la soutenance n'est pas encore planifiée -->
+			<div th:if="${soutenance == null}" class="no-defense">
+			    <div class="no-defense-icon">⏳</div>
+			    <div class="no-defense-text">Votre soutenance n'a pas encore été planifiée</div>
+			</div>
+                <p>⏳ Votre soutenance n'a pas encore été planifiée par l'administration.</p>
+            </div>
+        </div>
+
+>>>>>>> develop
     </div>
 </body>
 </html>

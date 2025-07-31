@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sujets Disponibles</title>
+    <!-- St3mel nafs l'style dyal l'application -->
+    <style>
+        /* Copier le style de base de dashboard.html (body, container, header, section, etc.) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7fa; min-height: 100vh; color: #333; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .header h1 { color: #1e3a8a; font-size: 28px; }
+        .back-link { color: #3b82f6; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .section { background: white; border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
+        .section-header { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb; }
+        .section-header h2 { color: #1e3a8a; font-size: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        table thead { border-bottom: 2px solid #e5e7eb; }
+        table th { padding: 12px 15px; text-align: left; font-weight: 600; color: #4b5563; font-size: 13px; }
+        table td { padding: 15px; border-top: 1px solid #e5e7eb; }
+        .subject-title { font-weight: 600; color: #1e3a8a; }
+        .subject-desc { color: #4b5563; font-size: 14px; }
+        .supervisor-info { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .choose-btn { background-color: #16a34a; color: white; padding: 8px 16px; border-radius: 6px; border:none; cursor:pointer; font-size: 13px; font-weight:500; }
+        .empty-state { text-align: center; padding: 50px; background: #f9fafb; border-radius: 8px; }
+        .alert-error { padding: 15px; background: #fee2e2; color: #b91c1c; border-radius: 8px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Sujets Disponibles pour Votre Filière</h1>
+        <a th:href="@{/etudiant/dashboard}" class="back-link"><span>←</span> Retour</a>
+    </div>
+
+    <div class="section">
+        <div class="section-header">
+            <h2>Choisissez un sujet pour commencer votre PFE</h2>
+        </div>
+        
+        <div th:if="${errorMessage}" class="alert-error" th:text="${errorMessage}"></div>
+        
+        <div th:if="${#lists.isEmpty(sujets) and errorMessage == null}" class="empty-state">
+            <p>Il n'y a actuellement aucun sujet disponible pour votre filière. Veuillez consulter l'administration.</p>
+        </div>
+            
+        <table th:if="${not #lists.isEmpty(sujets)}">
+            <thead>
+                <tr>
+                    <th>Titre du Sujet</th>
+                    <th>Description</th>
+                    <th>Encadrant</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="sujet : ${sujets}">
+                    <td><div class="subject-title" th:text="${sujet.titre}"></div></td>
+                    <td><p class="subject-desc" th:text="${sujet.description}"></p></td>
+                    <td><div class="supervisor-info" th:text="${sujet.encadrant?.prenom + ' ' + sujet.encadrant?.nom}"></div></td>
+                    <td>
+                        <form th:action="@{/etudiant/choisir-sujet/{id}(id=${sujet.id})}" method="post">
+                            <button type="submit" class="choose-btn">Choisir ce Sujet</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

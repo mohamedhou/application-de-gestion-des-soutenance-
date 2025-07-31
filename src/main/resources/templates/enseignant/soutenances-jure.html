@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soutenances (Juré)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .soutenance-card {
+            transition: all 0.3s;
+            border-left: 4px solid #3498db;
+        }
+        .soutenance-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-primary">
+                <i class="fas fa-gavel me-2"></i>Soutenances où vous êtes membre du jury
+            </h2>
+            <a href="/enseignant/dashboard" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Retour
+            </a>
+        </div>
+        
+        <div class="row g-4">
+            <div th:each="soutenance : ${soutenances}" class="col-md-6">
+                <div class="card h-100 soutenance-card">
+                    <div class="card-body">
+                        <span class="badge bg-info status-badge">
+                            <i class="fas fa-clock me-1"></i> 
+                            <span th:text="${#temporals.format(soutenance.date, 'dd/MM/yyyy')}"></span>
+                        </span>
+                        
+                        <h5 class="card-title" th:text="${soutenance.sujet.titre}"></h5>
+                        
+                        <div class="mb-2">
+                            <i class="fas fa-user-graduate text-muted me-2"></i>
+                            <strong>Étudiant:</strong>
+                            <span th:text="${soutenance.etudiant.prenom + ' ' + soutenance.etudiant.nom}"></span>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <i class="fas fa-user-tie text-muted me-2"></i>
+                            <strong>Encadrant:</strong>
+                            <span th:text="${soutenance.sujet.encadrant.prenom + ' ' + soutenance.sujet.encadrant.nom}"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                            <strong>Lieu:</strong>
+                            <span th:text="${soutenance.salle.nom}"></span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a th:href="@{/enseignant/soutenance/{id}(id=${soutenance.id})}" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-info-circle me-1"></i> Détails
+                            </a>
+                            
+                            <a th:href="@{/enseignant/soumettre-notes/{id}(id=${soutenance.id})}" 
+                               class="btn btn-sm btn-success">
+                                <i class="fas fa-edit me-1"></i> Noter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div th:if="${soutenances.empty}" class="alert alert-info mt-4">
+            <i class="fas fa-info-circle me-2"></i>
+            Vous n'êtes actuellement membre du jury d'aucune soutenance.
+        </div>
+    </div>
+</body>
+</html>
