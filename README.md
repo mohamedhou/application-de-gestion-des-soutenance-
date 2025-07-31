@@ -82,40 +82,57 @@ Pour lancer ce projet en local, suivez ces étapes :
 ---
 ---
 
+---
+
 ## 📸 Galerie d'aperçus
 
 Voici un aperçu des différentes interfaces de l'application, organisées par rôle d'utilisateur.
 
 ### 🔑 Authentification
-| Page de Connexion Administrateur  | Page de Connexion Etudiant | Page de Connexion Enseignant |
+| Page de Connexion Administrateur  | Page de Connexion Étudiant | Page de Connexion Enseignant |
 | :-----------------------: | :-----------------------: | :-----------------------: |
-| ![Page de Connexion](https://i.ibb.co/6P6Xy9h/aperçu/loginAdmin.png) | ![Page de Connexion](https://i.ibb.co/6P6Xy9h/aperçu/loginEtudiant.png) | ![Page de Connexion](https://i.ibb.co/6P6Xy9h/aperçu/loginEnseignant.png) |
-
----
+| ![][login-admin] | ![][login-etudiant] | ![][login-enseignant] |
 
 ### 👨‍💼 Espace Administrateur
 | Dashboard Principal (Vue d'ensemble) | Gestion des Salles (CRUD) | Planification de Soutenance (Interface Dynamique) |
 | :---: | :---: | :---: |
-| ![Dashboard Admin](https://i.ibb.co/hM8gBMM/aperçu/dashboardAdmin.png) | ![Gestion Salles](https://i.ibb.co/sK2wR09/aperçu/gestionSalles.png) | ![Planifier Soutenance](https://i.ibb.co/3Y8bQZ6/aperçu/planifierSoutenance.png) |
+| ![][admin-dashboard] | ![][admin-salles] | ![][admin-planifier] |
 
-| Gestion des Utilisateurs (Depuis le Dashboard) | Recherche Avancée de Soutenances | Gestion des  Soutenances |
-| :---: | :---: |:---: |
-| ![Validation Sujets](https://i.ibb.co/XYZ123/aperçu/gererEtilisateur.png) | ![Recherche Soutenances](https://i.ibb.co/ABC789/aperçu/chercherSoutenance.png) | ![gestion Soutenances](https://i.ibb.co/ABC789/aperçu/gestionSoutenance.png) |
-
----
+| Gestion des Utilisateurs | Recherche Avancée de Soutenances | Gestion des Soutenances |
+| :---: | :---: | :---: |
+| ![][admin-utilisateurs] | ![][admin-recherche] | ![][admin-soutenances] |
 
 ### 👨‍🏫 Espace Enseignant
-| Dashboard Enseignant | Proposition d'un Nouveau Sujet | Calendrier de gestion des indisponibilités |
+| Dashboard Enseignant | Proposition d'un Nouveau Sujet | Calendrier des indisponibilités |
 | :---: | :---: | :---: |
-| ![Dashboard Enseignant](https://i.ibb.co/123XYZ/aperçu/dachboardEnseignant.png) | ![Proposer Sujet](https://i.ibb.co/456ABC/aperçu/proposerSujet.png) | ![Calendrier Enseignant](https://i.ibb.co/789DEF/aperçu/disponibilite.png) |
-
----
+| ![][enseignant-dashboard] | ![][enseignant-proposer] | ![][enseignant-calendrier] |
 
 ### 🎓 Espace Étudiant
-| Dashboard Étudiant (Sujet à choisir) | Dashboard Étudiant (Soutenance planifiée) | Génération de la Convocation PDF |
+| Dashboard (Sujet à choisir) | Dashboard (Soutenance planifiée) | Convocation PDF |
 | :---: | :---: | :---: |
-| ![Dashboard Étudiant - Choisir Sujet](https://i.ibb.co/JKL123/choisirSujet.png) | ![Dashboard Étudiant - Soutenance OK](https://i.ibb.co/MNO456/dachboardEtudiant.png) | ![PDF Convocation](https://i.ibb.co/PQR789/convocation.png) |
+| ![][etudiant-choisir] | ![][etudiant-dashboard] | ![][etudiant-pdf] |
 
+<!-- ====== DÉFINITION DES LIENS D'IMAGES (LI GHADI YKHEDMO) ====== -->
+<!-- Remplacez les noms de fichiers par les vôtres s'ils sont différents -->
+
+[login-admin]: aperçu/loginAdmin.png "Page de Connexion Admin"
+[login-etudiant]: aperçu/loginEtudiant.png "Page de Connexion Étudiant"
+[login-enseignant]: aperçu/loginEnseignant.png "Page de Connexion Enseignant"
+
+[admin-dashboard]: aperçu/dashboardAdmin.png "Dashboard de l'Admin"
+[admin-salles]: aperçu/gestionSalles.png "Gestion des Salles"
+[admin-planifier]: aperçu/planifierSoutenance.png "Planification de Soutenance"
+[admin-utilisateurs]: aperçu/gererEtilisateur.png "Gestion des Utilisateurs"
+[admin-recherche]: aperçu/chercherSoutenance.png "Recherche de Soutenances"
+[admin-soutenances]: aperçu/gestionSoutenance.png "Liste des Soutenances"
+
+[enseignant-dashboard]: aperçu/dachboardEnseignant.png "Dashboard Enseignant"
+[enseignant-proposer]: aperçu/proposerSujet.png "Proposition de Sujet"
+[enseignant-calendrier]: aperçu/disponibilite.png "Calendrier des Indisponibilités"
+
+[etudiant-choisir]: aperçu/choisirSujet.png "Dashboard Étudiant - Choisir un Sujet"
+[etudiant-dashboard]: aperçu/dachboardEtudiant.png "Dashboard Étudiant - Sujet Affecté"
+[etudiant-pdf]: aperçu/convocation.pdf "Exemple de Convocation PDF"
 ---
 ## 📜 Licence
 
