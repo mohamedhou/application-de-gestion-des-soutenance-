@@ -89,25 +89,25 @@ Voici un aperçu des différentes interfaces de l'application, organisées par r
 ### 🔑 Authentification
 | Page de Connexion Administrateur  | Page de Connexion Etudiant | Page de Connexion Enseignant |
 | :-----------------------: | :-----------------------: | :-----------------------: |
-| ![Page de Connexion](https://i.ibb.co/6P6Xy9h/loginAdmin.png) | ![Page de Connexion](https://i.ibb.co/6P6Xy9h/loginEtudiant.png) | ![Page de Connexion](https://i.ibb.co/6P6Xy9h/loginEnseignant.png) |
+| ![Page de Connexion](https://i.ibb.co/6P6Xy9h/aperçu/loginAdmin.png) | ![Page de Connexion](https://i.ibb.co/6P6Xy9h/aperçu/loginEtudiant.png) | ![Page de Connexion](https://i.ibb.co/6P6Xy9h/aperçu/loginEnseignant.png) |
 
 ---
 
 ### 👨‍💼 Espace Administrateur
 | Dashboard Principal (Vue d'ensemble) | Gestion des Salles (CRUD) | Planification de Soutenance (Interface Dynamique) |
 | :---: | :---: | :---: |
-| ![Dashboard Admin](https://i.ibb.co/hM8gBMM/dashboardAdmin.png) | ![Gestion Salles](https://i.ibb.co/sK2wR09/gestionSalles.png) | ![Planifier Soutenance](https://i.ibb.co/3Y8bQZ6/planifierSoutenance.png) |
+| ![Dashboard Admin](https://i.ibb.co/hM8gBMM/aperçu/dashboardAdmin.png) | ![Gestion Salles](https://i.ibb.co/sK2wR09/aperçu/gestionSalles.png) | ![Planifier Soutenance](https://i.ibb.co/3Y8bQZ6/aperçu/planifierSoutenance.png) |
 
 | Gestion des Utilisateurs (Depuis le Dashboard) | Recherche Avancée de Soutenances | Gestion des  Soutenances |
 | :---: | :---: |:---: |
-| ![Validation Sujets](https://i.ibb.co/XYZ123/gererEtilisateur.png) | ![Recherche Soutenances](https://i.ibb.co/ABC789/chercherSoutenance.png) | ![gestion Soutenances](https://i.ibb.co/ABC789/gestionSoutenance.png) |
+| ![Validation Sujets](https://i.ibb.co/XYZ123/aperçu/gererEtilisateur.png) | ![Recherche Soutenances](https://i.ibb.co/ABC789/aperçu/chercherSoutenance.png) | ![gestion Soutenances](https://i.ibb.co/ABC789/aperçu/gestionSoutenance.png) |
 
 ---
 
 ### 👨‍🏫 Espace Enseignant
 | Dashboard Enseignant | Proposition d'un Nouveau Sujet | Calendrier de gestion des indisponibilités |
 | :---: | :---: | :---: |
-| ![Dashboard Enseignant](https://i.ibb.co/123XYZ/dachboardEnseignant.png) | ![Proposer Sujet](https://i.ibb.co/456ABC/proposerSujet.png) | ![Calendrier Enseignant](https://i.ibb.co/789DEF/disponibilite.png) |
+| ![Dashboard Enseignant](https://i.ibb.co/123XYZ/aperçu/dachboardEnseignant.png) | ![Proposer Sujet](https://i.ibb.co/456ABC/aperçu/proposerSujet.png) | ![Calendrier Enseignant](https://i.ibb.co/789DEF/aperçu/disponibilite.png) |
 
 ---
 
