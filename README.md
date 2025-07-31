@@ -131,8 +131,8 @@ Voici un aperçu des différentes interfaces de l'application, organisées par r
 [enseignant-calendrier]: aperçu/disponibilite.png "Calendrier des Indisponibilités"
 
 [etudiant-choisir]: aperçu/choisirSujet.png "Dashboard Étudiant - Choisir un Sujet"
-[etudiant-dashboard]: aperçu/dachboardEtudiant.png "Dashboard Étudiant - Sujet Affecté"
-[etudiant-pdf]: aperçu/convocation.pdf "Exemple de Convocation PDF"
+[etudiant-dashboard]: aperçu/dachboardEtudiant.jpg "Dashboard Étudiant - Sujet Affecté"
+[etudiant-pdf]: aperçu/convocation.png "Exemple de Convocation PDF"
 ---
 ## 📜 Licence
 
