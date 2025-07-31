@@ -6,7 +6,7 @@
 
 Application web complète pour la gestion centralisée du processus des soutenances de fin d'études à la Faculté des Sciences de Meknès (FSM), conçue pour remplacer les processus manuels par un système fluide, automatisé et efficace.
 
-![Aperçu du Dashboard Admin](https://i.ibb.co/6P6Xy9h/image.png)
+![][admin-dashboard]
 
 ---
 
