@@ -80,17 +80,43 @@ Pour lancer ce projet en local, suivez ces étapes :
     Ouvrez votre navigateur et allez à `http://localhost:8080`.
 
 ---
+---
 
-## 📸 Captures d'écran
+## 📸 Galerie d'aperçus
 
-Quelques aperçus de l'application :
+Voici un aperçu des différentes interfaces de l'application, organisées par rôle d'utilisateur.
 
-| Page de Connexion | Dashboard Admin | Calendrier Enseignant |
-|---|---|---|
-| ![Login](https://i.ibb.co/hM8gBMM/image.png) | ![Admin Dashboard](https://i.ibb.co/sK2wR09/image.png) | ![Calendrier](https://i.ibb.co/3Y8bQZ6/image.png) |
+### 🔑 Authentification
+| Page de Connexion Administrateur  | Page de Connexion Etudiant | Page de Connexion Enseignant |
+| :-----------------------: | :-----------------------: | :-----------------------: |
+| ![Page de Connexion](https://i.ibb.co/6P6Xy9h/loginAdmin.png) | ![Page de Connexion](https://i.ibb.co/6P6Xy9h/loginEtudiant.png) | ![Page de Connexion](https://i.ibb.co/6P6Xy9h/loginEnseignant.png) |
 
 ---
 
+### 👨‍💼 Espace Administrateur
+| Dashboard Principal (Vue d'ensemble) | Gestion des Salles (CRUD) | Planification de Soutenance (Interface Dynamique) |
+| :---: | :---: | :---: |
+| ![Dashboard Admin](https://i.ibb.co/hM8gBMM/dashboardAdmin.png) | ![Gestion Salles](https://i.ibb.co/sK2wR09/gestionSalles.png) | ![Planifier Soutenance](https://i.ibb.co/3Y8bQZ6/planifierSoutenance.png) |
+
+| Gestion des Utilisateurs (Depuis le Dashboard) | Recherche Avancée de Soutenances |
+| :---: | :---: |
+| ![Validation Sujets](https://i.ibb.co/XYZ123/gererEtilisateur.png) | ![Recherche Soutenances](https://i.ibb.co/ABC789/chercherSoutenance.png) |
+
+---
+
+### 👨‍🏫 Espace Enseignant
+| Dashboard Enseignant | Proposition d'un Nouveau Sujet | Calendrier de gestion des indisponibilités |
+| :---: | :---: | :---: |
+| ![Dashboard Enseignant](https://i.ibb.co/123XYZ/dachboardEnseignant.png) | ![Proposer Sujet](https://i.ibb.co/456ABC/proposerSujet.png) | ![Calendrier Enseignant](https://i.ibb.co/789DEF/disponibilite.png) |
+
+---
+
+### 🎓 Espace Étudiant
+| Dashboard Étudiant (Sujet à choisir) | Dashboard Étudiant (Soutenance planifiée) | Génération de la Convocation PDF |
+| :---: | :---: | :---: |
+| ![Dashboard Étudiant - Choisir Sujet](https://i.ibb.co/JKL123/choisirSujet.png) | ![Dashboard Étudiant - Soutenance OK](https://i.ibb.co/MNO456/dachboardEtudiant.png) | ![PDF Convocation](https://i.ibb.co/PQR789/convocation.png) |
+
+---
 ## 📜 Licence
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
