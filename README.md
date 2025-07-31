@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# application-de-gestion-des-soutenance-
-application de hestion des soutenance en FSM fait par spring boot  
-=======
 # 🎓 Application de Gestion des Soutenances - FSM
 
 [![Java](https://img.shields.io/badge/Java-17-blue.svg)](https://www.java.com)
@@ -146,4 +142,3 @@ Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de 
 
 ## 👨‍💻 Auteur
 - **HOUCHT MOHAMED** - [mohammedhoucht](https://github.com/mohamedhou)
->>>>>>> develop
