@@ -141,4 +141,4 @@ Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de 
 ---
 
 ## 👨‍💻 Auteur
-- **HOUCHT MOHAMMED** - [mohammedhoucht](https://github.com/mohammedhoucht)
+- **HOUCHT MOHAMED** - [mohammedhoucht](https://github.com/mohamedhou)
