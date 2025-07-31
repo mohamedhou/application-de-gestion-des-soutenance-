@@ -99,7 +99,7 @@ Voici un aperçu des différentes interfaces de l'application, organisées par r
 | ![Dashboard Admin](https://i.ibb.co/hM8gBMM/dashboardAdmin.png) | ![Gestion Salles](https://i.ibb.co/sK2wR09/gestionSalles.png) | ![Planifier Soutenance](https://i.ibb.co/3Y8bQZ6/planifierSoutenance.png) |
 
 | Gestion des Utilisateurs (Depuis le Dashboard) | Recherche Avancée de Soutenances | Gestion des  Soutenances |
-| :---: | :---: |
+| :---: | :---: |:---: |
 | ![Validation Sujets](https://i.ibb.co/XYZ123/gererEtilisateur.png) | ![Recherche Soutenances](https://i.ibb.co/ABC789/chercherSoutenance.png) | ![gestion Soutenances](https://i.ibb.co/ABC789/gestionSoutenance.png) |
 
 ---
